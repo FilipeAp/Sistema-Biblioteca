@@ -1,0 +1,53 @@
+@model IEnumerable<Biblioteca.Models.Copia>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Cópias</h1>
+
+<a asp-action="Create" class="btn btn-success btn-sm">
+    Registrar Nova Cópia
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CopiaId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstadoConservacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Disponivel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Livro)
+            </th>
+            <th>Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.CopiaId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.EstadoConservacao)
+            </td>
+            <td>
+                @(item.Disponivel ? "✅Sim" : "❌Não")
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Livro.Titulo)
+            </td>
+            <td>
+                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.CopiaId">Editar</a> 
+                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.CopiaId">Detalhes</a> 
+                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.CopiaId">Deletar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

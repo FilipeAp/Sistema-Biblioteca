@@ -1,0 +1,41 @@
+@model Biblioteca.Models.Autor
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalhes</h1>
+
+<div>
+    <hr />
+    <dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NomeAutor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NomeAutor)
+        </dd>
+    @* </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Pseudonimos)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Pseudonimos)
+        </dd>
+    </dl> *@
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Livros)
+        </dt>
+        <dd class = "col-sm-10">
+            @foreach(var livro in Model.Livros)
+            {
+                @livro.Titulo
+                <br/>
+            }
+        </dd>
+    </dl> 
+</div>
+<div class = "d-flex gap-2">
+    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.AutorId">Editar</a> 
+    <a href="javascript:history.back()" class="btn btn-primary">Voltar</a>
+</div>

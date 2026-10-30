@@ -1,0 +1,92 @@
+@model IEnumerable<Biblioteca.Models.Autor>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>Autores</h1>
+
+<a asp-action="Create" class="btn btn-success btn-sm">
+    Registrar Novo Autor
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeAutor)
+            </th>
+            
+            <th>
+                Qtd. de Livros
+            </th>
+            <th>Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.NomeAutor)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Livros.Count)
+            </td>
+            <td>
+                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.AutorId">Editar</a> 
+                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.AutorId">Detalhes</a> 
+                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.AutorId">Deletar</a>
+            </td>
+        </tr>
+    }
+@* IMPLEMENTAÇÕES FUTURAS:
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @if(item.Pseudonimos.Count > 0){
+                    <details>
+                        <summary>@Html.DisplayFor(model => item.NomeAutor)</summary>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Pseudonimos)
+                                </th>
+                            </tr>
+                            @foreach (var pseudonimo in item.Pseudonimos)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(p => pseudonimo.NomePseudonimo)</td>
+                                    <td>
+                                    <a asp-controller="Pseudonimo" asp-action="Edit" asp-route-id="@pseudonimo.PseudonimoId">Edit</a> |
+                                    <a asp-controller="Pseudonimo" asp-action="Details" asp-route-id="@pseudonimo.PseudonimoId">Details</a> |
+                                    <a asp-controller="Pseudonimo" asp-action="Delete" asp-route-id="@pseudonimo.PseudonimoId">Delete</a> |
+                                    
+                                </td>
+                                </tr>
+                            }
+                        </table>
+                            <a asp-controller="Pseudonimo" asp-action="Create" asp-route-id="@item.AutorId">Add Pseudônimo</a>
+                    </details>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => item.NomeAutor)   
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Livros)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AutorId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AutorId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AutorId">Delete</a> |
+                    @if(item.Pseudonimos.Count == 0)
+                    {
+                        <a asp-controller="Pseudonimo" asp-action="Create" asp-route-id="@item.AutorId">Add Pseudônimo</a>
+                    }
+            </td>
+        </tr>
+} *@
+    </tbody>
+</table>

@@ -1,0 +1,317 @@
+@model IEnumerable<Biblioteca.Models.Emprestimo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="d-flex justify-content-between align-items-end">
+    <div>
+        <h1>Emprestimos</h1>
+
+        <a asp-action="Create" class="btn btn-success btn-sm">
+            Registrar Novo Emprestimo
+        </a>
+    </div>
+    
+    
+    <div class="d-flex flex-row align-items-center gap-2 flex-nowrap">
+
+        <div class="btn-group flex-shrink-0" role="group" 
+             aria-label="Filtrar empréstimos por status"
+             class="grupo-filtros">
+
+            <button type="button"
+                    class="btn btn-primary btn-sm filtro-status active"
+                    data-filtro="todos">
+                Todos
+            </button>
+
+            <button type="button"
+                    class="btn btn-outline-primary btn-sm filtro-status"
+                    data-filtro="andamento">
+                Em andamento
+            </button>
+
+            <button type="button"
+                    class="btn btn-outline-primary btn-sm filtro-status"
+                    data-filtro="devolvido">
+                Devolvidos
+            </button>
+        </div>
+
+        <input type="search"
+               id="buscarEmprestimo"
+               class="form-control form-control"
+               placeholder="Buscar empréstimo..."
+               style="width: 220px;" />
+
+    </div>
+
+
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataRetida)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrevisaoDevolucao)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.DataEntregue)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Multa)
+            </th>
+            @* <th>
+                Entregue?
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CopiaId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FuncionarioId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Copias)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Funcionario)
+            </th> *@
+
+            <th>Status</th>
+            <th>Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="item-emprestimo"
+            data-status="@(item.DataEntregue == null
+                ? "andamento"
+                : "devolvido")">
+            <td>
+                @Html.DisplayFor(model => item.Usuario.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DataRetida)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.PrevisaoDevolucao)
+            </td>
+            @* <td>
+                @Html.DisplayFor(model => item.DataEntregue)
+            </td> *@
+            <td>
+                @Html.DisplayFor(model => item.Multa)
+            </td>
+            @* <td>
+                    @(item.DataEntregue == null ? "Não" : "Sim")
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.CopiaId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.UsuarioId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.FuncionarioId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Copias)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Funcionario)
+            </td> *@
+            @* @if(item.DataEntregue > DateTime.MinValue){ *@
+                
+            <td>
+                @if (item.DataEntregue == null)
+                {
+                    <form asp-action="RegistrarEntrega"
+                          asp-route-id="@item.EmprestimoId"
+                          method="post"
+                          onsubmit="return confirm('Deseja registrar a devolução deste empréstimo?');">
+
+                        <button type="submit" class="btn btn-success">
+                            Entregue
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary" disabled>
+                        Devolvido
+                    </button>
+                }
+            </td>
+
+            @* }
+            else{
+                <td>
+                    <div class="form-group">
+                    <input value="Entregue" class="btn btn-secondary" disabled />
+                    </div>
+                </td>
+            } *@
+
+            <td>
+                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.EmprestimoId">Editar</a> 
+                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.EmprestimoId">Detalhes</a> 
+                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.EmprestimoId">Deletar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<nav aria-label="Paginação dos Emprestimos">
+    <ul id="paginacaoEmprestimo"
+        class="pagination justify-content-center mt-4">
+    </ul>
+</nav>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            const campo = document.getElementById("buscarEmprestimo");
+            const linhas = Array.from(
+                document.querySelectorAll(".item-emprestimo")
+            );
+            const paginacao = document.getElementById("paginacaoEmprestimo");
+            const botoesFiltro = document.querySelectorAll(".filtro-status");
+
+            const itensPorPagina = 10;
+
+            let paginaAtual = 1;
+            let filtroAtual = "todos";
+            let emprestimosFiltrados = [...linhas];
+
+            function aplicarFiltros() {
+                const termo = campo.value.trim().toLocaleLowerCase();
+
+                emprestimosFiltrados = linhas.filter(linha => {
+                    const correspondeBusca = linha.textContent
+                        .toLocaleLowerCase()
+                        .includes(termo);
+
+                    const status = linha.dataset.status;
+
+                    const correspondeStatus =
+                        filtroAtual === "todos" ||
+                        status === filtroAtual;
+
+                    return correspondeBusca && correspondeStatus;
+                });
+
+                paginaAtual = 1;
+                renderizarTabela();
+            }
+
+            function renderizarTabela() {
+                const totalPaginas = Math.ceil(
+                    emprestimosFiltrados.length / itensPorPagina
+                );
+
+                paginaAtual = Math.max(
+                    1,
+                    Math.min(paginaAtual, totalPaginas || 1)
+                );
+
+                linhas.forEach(linha => {
+                    linha.style.display = "none";
+                });
+
+                const inicio = (paginaAtual - 1) * itensPorPagina;
+                const fim = inicio + itensPorPagina;
+
+                emprestimosFiltrados.slice(inicio, fim).forEach(linha => {
+                    linha.style.display = "";
+                });
+
+                renderizarBotoes(totalPaginas);
+            }
+
+            function renderizarBotoes(totalPaginas) {
+                paginacao.innerHTML = "";
+
+                if (totalPaginas <= 1) {
+                    return;
+                }
+
+                function adicionarBotao(texto, pagina, desabilitado = false,
+                    ativo = false) {
+                    const li = document.createElement("li");
+                    li.className = "page-item";
+
+                    if (desabilitado) li.classList.add("disabled");
+                    if (ativo) li.classList.add("active");
+
+                    const botao = document.createElement("button");
+                    botao.type = "button";
+                    botao.className = "page-link";
+                    botao.textContent = texto;
+                    botao.disabled = desabilitado;
+
+                    botao.addEventListener("click", function () {
+                        paginaAtual = pagina;
+                        renderizarTabela();
+                    });
+
+                    li.appendChild(botao);
+                    paginacao.appendChild(li);
+                }
+
+                adicionarBotao("‹", paginaAtual - 1, paginaAtual === 1);
+
+                let inicio = Math.max(1, paginaAtual - 2);
+                let fim = Math.min(totalPaginas, inicio + 4);
+
+                inicio = Math.max(1, fim - 4);
+
+                for (let i = inicio; i <= fim; i++) {
+                    adicionarBotao(i, i, false, i === paginaAtual);
+                }
+
+                adicionarBotao(
+                    "›",
+                    paginaAtual + 1,
+                    paginaAtual === totalPaginas
+                );
+            }
+
+            campo.addEventListener("input", aplicarFiltros);
+
+            botoesFiltro.forEach(botao => {
+                botao.addEventListener("click", function () {
+                    filtroAtual = this.dataset.filtro;
+
+                    botoesFiltro.forEach(b => {
+                        b.classList.remove("active", "btn-primary");
+                        b.classList.add("btn-outline-primary");
+                    });
+
+                    this.classList.add("active", "btn-primary");
+                    this.classList.remove("btn-outline-primary");
+
+                    aplicarFiltros();
+                });
+            });
+
+            aplicarFiltros();
+        });
+
+    </script>
+}

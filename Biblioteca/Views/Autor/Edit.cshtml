@@ -1,0 +1,47 @@
+@model Biblioteca.Models.Autor
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar Autor</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AutorId" />
+            <div class="form-group">
+                <label asp-for="NomeAutor" class="control-label"></label>
+                <input asp-for="NomeAutor" class="form-control" />
+                <span asp-validation-for="NomeAutor" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                <label asp-for="Pseudonimos" class="control-label"></label>
+                <input asp-for="Pseudonimos" class="form-control" />
+                <span asp-validation-for="Pseudonimos" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Livros" class="control-label"></label>
+                <input asp-for="Livros" class="form-control" />
+                <span asp-validation-for="Livros" class="text-danger"></span>
+            </div> *@
+            <br />
+            <div class = "d-flex gap-2">
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-warning" />
+                </div>
+                <div>
+                    <a href="javascript:history.back()" class="btn btn-primary">Voltar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

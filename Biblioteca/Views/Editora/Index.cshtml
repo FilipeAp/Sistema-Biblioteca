@@ -1,0 +1,101 @@
+@model IEnumerable<Biblioteca.Models.Editora>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Editoras</h1>
+
+<a asp-action="Create" class="btn btn-success btn-sm">
+    Registrar Nova Editora
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeEditora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CnpjEditora)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.CnpjMatriz)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Logradouro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Numero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bairro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cep)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Complemento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Livros)
+            </th> *@
+            <th>Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.NomeEditora)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Telefone)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.CnpjEditora)
+            </td>
+            @* <td>
+                @Html.DisplayFor(model => item.CnpjMatriz)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Logradouro)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Numero)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Bairro)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Cidade)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Cep)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Complemento)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Livros)
+            </td> *@
+            <td>
+                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.EditoraId">Editar</a> 
+                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.EditoraId">Detalhes</a> 
+                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.EditoraId">Deletar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

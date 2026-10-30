@@ -1,0 +1,77 @@
+@model Biblioteca.Models.Emprestimo
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Deseja deletar esse emprestimo?</h1>
+
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DataRetida)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DataRetida)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PrevisaoDevolucao)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PrevisaoDevolucao)
+        </dd>
+    </dl>
+    @if (Model.DataEntregue > DateTime.MinValue){
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.DataEntregue)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DataEntregue)
+            </dd>
+        </dl>
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Multa)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Multa)
+            </dd>
+        </dl>
+    }
+    <dl class="row">
+        @if(Model.Copias.Any()){
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Copias)
+        </dt>
+        <dd class = "col-sm-10">
+            @string.Join(", ", Model.Copias.Select(c => c.CopiaId))
+        </dd>
+        }
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Usuario.Nome)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Usuario.Nome)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Funcionario.Nome)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Funcionario.Nome)
+        </dd>
+    </dl>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="EmprestimoId" />
+        <input type="submit" value="Deletar" class="btn btn-danger" /> 
+        <a href="javascript:history.back()" class="btn btn-primary">Voltar</a>
+    </form>
+</div>

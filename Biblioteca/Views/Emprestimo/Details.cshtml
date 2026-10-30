@@ -1,0 +1,75 @@
+@model Biblioteca.Models.Emprestimo
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalhes do Emprestimo</h1>
+
+<div>
+    <hr />
+    <dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DataRetida)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DataRetida)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PrevisaoDevolucao)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PrevisaoDevolucao)
+        </dd>
+    </dl>
+    @if (Model.DataEntregue > DateTime.MinValue)
+    {
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DataEntregue)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DataEntregue)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Multa)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Multa)
+        </dd>
+    }
+    </dl>
+        @if(Model.Copias.Any()){
+        <dt class = "col-sm-2">
+            Cópias emprestadas
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                foreach(var copia in Model.Copias)
+                {
+                    <div>Cópia @copia.CopiaId - @copia.Livro.Titulo</div>
+                }
+            }
+
+        </dd>
+        }
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Usuario.Nome)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Usuario.Nome)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Funcionario.Nome)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Funcionario.Nome)
+        </dd>
+    </dl>
+</div>
+<div class = "d-flex gap-2">
+    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.EmprestimoId">Editar</a> 
+    <a href="javascript:history.back()" class="btn btn-primary">Voltar</a>
+</div>

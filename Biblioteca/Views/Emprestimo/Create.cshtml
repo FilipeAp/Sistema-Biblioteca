@@ -1,0 +1,235 @@
+@model Biblioteca.ViewModels.EmprestimoViewModel
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Registrar Novo Emprestimo</h1>
+
+
+<hr />
+@if (Model.Copias.Any())
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="DataRetida" class="control-label"></label>
+                    <input asp-for="DataRetida" type="datetime-local" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" max="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" class="form-control" id="DataRetida" />
+                    <span asp-validation-for="DataRetida" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PrevisaoDevolucao" class="control-label"></label>
+                    <input asp-for="PrevisaoDevolucao" type="date" class="form-control bg-light text-muted" id="PrevisaoDevolucao" readonly/>
+
+                    <span asp-validation-for="PrevisaoDevolucao" class="text-danger"></span>
+                </div>
+
+                @* <div class="form-group">
+                <label asp-for="DataEntregue" class="control-label"></label>
+                <input asp-for="DataEntregue" class="form-control" />
+                <span asp-validation-for="DataEntregue" class="text-danger"></span>
+            </div> *@
+
+                @* <div class="form-group">
+                <label asp-for="Multa" class="control-label"></label>
+                <input asp-for="Multa" class="form-control" />
+                <span asp-validation-for="Multa" class="text-danger"></span>
+            </div> *@
+            
+            <span asp-validation-for="UsuarioId"
+                  class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="FuncionarioId" class="form-label">Colaborador</label>
+                    <select asp-for="FuncionarioId"
+                    asp-items="Model.Funcionarios"
+                    class="form-select">
+                        <option value="">Selecione um Colaborador</option>
+                    </select>
+                    <span asp-validation-for="FuncionarioId" class="text-danger"></span>
+                </div>
+
+            <hr />
+            <h4>Leitores</h4>
+
+            <input type="search"
+                   id="buscaLeitor"
+                   class="form-control mb-2"
+                   placeholder="Digite o nome do leitor..." />
+
+            <div class="border rounded p-3 fundoCheckbox"
+                 style="max-height: 220px; overflow-y: auto;"
+                 id="listaLeitores">
+
+                @foreach (var usuario in Model.Usuarios
+                    .Where(u => !string.IsNullOrEmpty(u.Value)))
+                {
+                    <div class="form-check item-leitor">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="UsuarioId"
+                               value="@usuario.Value"
+                               id="usuario_@usuario.Value"
+                               required />
+
+                        <label class="form-check-label"
+                               for="usuario_@usuario.Value">
+                            @usuario.Text
+                        </label>
+                    </div>
+                }
+            </div>
+            <hr/>
+                <h4>Cópias</h4>
+
+                <input type="search"
+                id="buscarCopia"
+                class="form-control mb-2"
+                placeholder="Buscar ID da Cópia..." />
+
+
+                <div class="border rounded p-3 fundoCheckbox"
+                style="max-height: 220px; overflow-y: auto;">
+
+                    @foreach (var copia in Model.Copias)
+                        {
+                            <div class="form-check item-copia">
+                                <input class="form-check-input"
+                                type="checkbox"
+                                name="CopiaIds"
+                                value="@copia.Value"
+                                id="copia_@copia.Value"
+                                />
+
+                                <label class="form-check-label"
+                                for="copia_@copia.Value">
+                                    @copia.Text 
+                                </label>
+                            </div>
+                        }
+                    </div>
+
+                    @* <div class="form-group">
+                <label asp-for="Copias" class="control-label"></label>
+                <input asp-for="Copias" class="form-control" />
+                <span asp-validation-for="Copias" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Usuario" class="control-label"></label>
+                <input asp-for="Usuario" class="form-control" />
+                <span asp-validation-for="Usuario" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Funcionario" class="control-label"></label>
+                <input asp-for="Funcionario" class="form-control" />
+                <span asp-validation-for="Funcionario" class="text-danger"></span>
+            </div> *@
+            <br />
+            <div class = "d-flex gap-2">
+                <div class="form-group">
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div> 
+                </div>
+                <div>
+                    <a href="javascript:history.back()" class="btn btn-secondary">Voltar</a>
+                </div>
+            </div>
+
+                </form>
+            </div>
+        </div>
+}
+else
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Nem uma cópia disponivel para emprestimo no momento.
+    </div> 
+    <div>
+        <a href="javascript:history.back()" class="btn btn-primary">Voltar</a>
+    </div>
+}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dataRetirada = document.getElementById("DataRetida");
+        const previsaoDevolucao = document.getElementById("PrevisaoDevolucao");
+
+        function calcularPrevisaoDevolucao() {
+            if (!dataRetirada.value) {
+                previsaoDevolucao.value = "";
+                return;
+            }
+
+            const [ano, mes, dia] = dataRetirada.value
+                .split("T")[0]
+                .split("-")
+                .map(Number);
+
+            const data = new Date(ano, mes - 1, dia);
+            data.setDate(data.getDate() + 14);
+
+            const novoAno = data.getFullYear();
+            const novoMes = String(data.getMonth() + 1).padStart(2, "0");
+            const novoDia = String(data.getDate()).padStart(2, "0");
+
+            previsaoDevolucao.value =
+                `${novoAno}-${novoMes}-${novoDia}`;
+        }
+
+        // Preenche a data atual caso o campo esteja vazio
+        if (!dataRetirada.value) {
+            const agora = new Date();
+            const ano = agora.getFullYear();
+            const mes = String(agora.getMonth() + 1).padStart(2, "0");
+            const dia = String(agora.getDate()).padStart(2, "0");
+            const hora = String(agora.getHours()).padStart(2, "0");
+            const minuto = String(agora.getMinutes()).padStart(2, "0");
+
+            dataRetirada.value =
+                `${ano}-${mes}-${dia}T${hora}:${minuto}`;
+        }
+
+        // Calcula a previsão assim que a tela abrir
+        calcularPrevisaoDevolucao();
+
+        // Recalcula quando a retirada for alterada
+        dataRetirada.addEventListener("change", calcularPrevisaoDevolucao);
+    });
+</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function configurarBusca(campoId, classeItem) {
+            const campo = document.getElementById(campoId);
+
+            campo.addEventListener("input", function () {
+                const termo = campo.value.toLowerCase();
+
+                document.querySelectorAll("." + classeItem)
+                    .forEach(function (item) {
+                        const texto = item.textContent.toLowerCase();
+
+                        item.style.display =
+                            texto.includes(termo) ? "" : "none";
+                    });
+            });
+        }
+
+        configurarBusca("buscarCopia", "item-copia");
+        configurarBusca("buscaLeitor", "item-leitor");
+
+
+
+
+    </script>
+}

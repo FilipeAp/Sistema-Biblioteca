@@ -1,0 +1,102 @@
+@model Biblioteca.Models.Editora
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalhes da Editora</h1>
+
+<div>
+    <hr />
+    <dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NomeEditora)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NomeEditora)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Telefone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Telefone)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CnpjEditora)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CnpjEditora)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CnpjMatriz)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CnpjMatriz)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Logradouro)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Logradouro)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Numero)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Numero)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bairro)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bairro)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Cidade)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Cidade)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Cep)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Cep)
+        </dd>
+    </dl>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Complemento)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Complemento)
+        </dd>
+    </dl>
+        @* <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Livros)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Livros)
+        </dd> *@
+    </dl>
+</div>
+<br />
+<div class = "d-flex gap-2">
+    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.EditoraId">Edit</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>
+
