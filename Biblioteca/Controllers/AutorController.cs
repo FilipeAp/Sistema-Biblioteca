@@ -3,9 +3,11 @@ using Biblioteca.Context;
 using Biblioteca.Models;
 using Biblioteca.Repositories;
 using Biblioteca.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class AutorController : Controller
 {
     private readonly IAutorRepository _autorRepository;

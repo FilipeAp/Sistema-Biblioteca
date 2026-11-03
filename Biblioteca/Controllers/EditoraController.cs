@@ -1,10 +1,12 @@
 
+using Biblioteca.Context;
+using Biblioteca.Models;
+using Biblioteca.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Biblioteca.Models;
-using Biblioteca.Context;
-using Biblioteca.Repositories.Interfaces;
 
+[Authorize]
 public class EditoraController : Controller
 {
     private readonly IEditoraRepository _editoraRepository;

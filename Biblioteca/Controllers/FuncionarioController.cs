@@ -2,9 +2,11 @@
 using Biblioteca.Context;
 using Biblioteca.Models;
 using Biblioteca.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class FuncionarioController : Controller
 {
     private readonly IFuncionarioRepository _funcionarioRepository;

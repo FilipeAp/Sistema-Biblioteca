@@ -4,10 +4,12 @@ using Biblioteca.Models;
 using Biblioteca.Repositories;
 using Biblioteca.Repositories.Interfaces;
 using Biblioteca.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class CopiaController : Controller
 {
     private readonly ICopiaRepository _copiaRepository;

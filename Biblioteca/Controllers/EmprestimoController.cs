@@ -5,10 +5,12 @@ using Biblioteca.Repositories;
 using Biblioteca.Repositories.Interfaces;
 using Biblioteca.ViewModel;
 using Biblioteca.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class EmprestimoController : Controller
 {
     private readonly IEmprestimoRepository _emprestimoRepository;

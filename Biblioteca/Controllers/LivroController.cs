@@ -1,11 +1,13 @@
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Biblioteca.Models;
 using Biblioteca.Repositories.Interfaces;
 using Biblioteca.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class LivroController : Controller
 {
     private readonly ILivroRepository _livroRepository;
