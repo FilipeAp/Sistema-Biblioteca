@@ -1,6 +1,7 @@
 using Biblioteca.Context;
 using Biblioteca.Repositories;
 using Biblioteca.Repositories.Interfaces;
+using Biblioteca.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,8 +23,19 @@ builder.Services.AddTransient<IPseudonimoRepository, PseudonimoRepository>();
 builder.Services.AddTransient<ISubcategoriaRepository, SubcategoriaRepository>();
 builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddTransient<ICopiaRepository, CopiaRepository>();
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
 
 var app = builder.Build();
+
+// Inicialização das Roles
+using (var scope = app.Services.CreateScope())
+{
+    var seedRoleInitial = scope.ServiceProvider
+        .GetRequiredService<ISeedUserRoleInitial>();
+
+    seedRoleInitial.SeedRoles();
+    seedRoleInitial.SeedUsers();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

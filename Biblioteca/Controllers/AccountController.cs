@@ -1,4 +1,5 @@
 ﻿using Biblioteca.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +45,7 @@ public class AccountController : Controller
         ModelState.AddModelError("", "Falha ao realizar o login!");
         return View(loginVM);
     }
+    [Authorize(Roles = "Admin")]
     public IActionResult Register()
     {
         return View();
@@ -51,6 +53,7 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Register(LoginViewModel registroVM)
     {
         if (ModelState.IsValid)
@@ -61,7 +64,9 @@ public class AccountController : Controller
             if (result.Succeeded)
             {
                 //await _signInManager.SignInAsync(user, isPersistent: false); -> susuário já fica autenticado, mas lembre que abaixo ele joga pra tela de login.
+                await _userManager.AddToRoleAsync(user, "Member");
                 return RedirectToAction("Login", "Account");
+
             }
             else
             {
@@ -77,6 +82,11 @@ public class AccountController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Login", "Account");
+    }
+
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 
 }
