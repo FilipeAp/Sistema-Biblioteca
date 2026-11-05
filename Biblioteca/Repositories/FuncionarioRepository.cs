@@ -1,6 +1,7 @@
 ﻿using Biblioteca.Context;
 using Biblioteca.Repositories.Interfaces;
 using Biblioteca.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Biblioteca.Repositories;
 
@@ -13,6 +14,8 @@ public class FuncionarioRepository : IFuncionarioRepository
     }
 
     public IEnumerable<Funcionario> Funcionarios => _context.Funcionario;
+    public IEnumerable<IdentityUser> Users => _context.Users;
+
     public async Task AddAsync(Funcionario funcionario)
     {
         _context.Add(funcionario);

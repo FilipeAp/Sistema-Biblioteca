@@ -33,13 +33,13 @@ public class SeedUserRoleInitial : ISeedUserRoleInitial
 
     public void SeedUsers()
     {
-        if (_userManager.FindByEmailAsync("usuario@localhost").Result == null)
+        if (_userManager.FindByEmailAsync("usuario@localhost.com").Result == null)
         {
             IdentityUser user = new IdentityUser();
-            user.UserName = "usuario@localhost";
-            user.Email = "usuario@localhost";
-            user.NormalizedUserName = "USUARIO@LOCALHOST";
-            user.NormalizedEmail = "USUARIO@LOCALHOST";
+            user.UserName = "usuario@localhost.com";
+            user.Email = "usuario@localhost.com";
+            user.NormalizedUserName = "USUARIO@LOCALHOST.COM";
+            user.NormalizedEmail = "USUARIO@LOCALHOST.COM";
             user.EmailConfirmed = true;
             user.LockoutEnabled = false;
             user.SecurityStamp = Guid.NewGuid().ToString();
@@ -52,13 +52,13 @@ public class SeedUserRoleInitial : ISeedUserRoleInitial
             }
         }
 
-        if (_userManager.FindByEmailAsync("admin@localhost").Result == null)
+        if (_userManager.FindByEmailAsync("admin@localhost.com").Result == null)
         {
             IdentityUser user = new IdentityUser();
-            user.UserName = "admin@localhost";
-            user.Email = "admin@localhost";
-            user.NormalizedUserName = "ADMIN@LOCALHOST";
-            user.NormalizedEmail = "ADMIN@LOCALHOST";
+            user.UserName = "admin@localhost.com";
+            user.Email = "admin@localhost.com";
+            user.NormalizedUserName = "ADMIN@LOCALHOST.COM";
+            user.NormalizedEmail = "ADMIN@LOCALHOST.COM";
             user.EmailConfirmed = true;
             user.LockoutEnabled = false;
             user.SecurityStamp = Guid.NewGuid().ToString();

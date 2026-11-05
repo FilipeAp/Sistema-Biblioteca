@@ -1,10 +1,12 @@
 ﻿using Biblioteca.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Biblioteca.Repositories.Interfaces;
 
 public interface IFuncionarioRepository
 {
     IEnumerable<Funcionario> Funcionarios { get; }
+    IEnumerable<IdentityUser> Users { get; }
 
     Task AddAsync(Funcionario funcionario);
 

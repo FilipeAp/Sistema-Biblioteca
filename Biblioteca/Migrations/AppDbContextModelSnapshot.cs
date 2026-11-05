@@ -238,6 +238,10 @@ namespace Biblioteca.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Logradouro")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -259,6 +263,9 @@ namespace Biblioteca.Migrations
                         .HasColumnType("nvarchar(25)");
 
                     b.HasKey("FuncionarioId");
+
+                    b.HasIndex("IdentityUserId")
+                        .IsUnique();
 
                     b.ToTable("Funcionario");
                 });
@@ -674,6 +681,17 @@ namespace Biblioteca.Migrations
                     b.Navigation("Funcionario");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Biblioteca.Models.Funcionario", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithOne()
+                        .HasForeignKey("Biblioteca.Models.Funcionario", "IdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Biblioteca.Models.Livro", b =>

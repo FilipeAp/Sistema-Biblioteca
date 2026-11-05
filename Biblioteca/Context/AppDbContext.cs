@@ -21,4 +21,15 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Pseudonimo> Pseudonimo { get; set; }
     public DbSet<Subcategoria> Subcategoria { get; set; }
     public DbSet<Usuario> Usuario { get; set; }
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Funcionario>()
+            .HasOne(f => f.User)
+            .WithOne()
+            .HasForeignKey<Funcionario>(f => f.IdentityUserId);
+    }
 }

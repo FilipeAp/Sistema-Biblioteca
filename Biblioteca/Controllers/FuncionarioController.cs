@@ -42,6 +42,8 @@ public class FuncionarioController : Controller
     // GET: FUNCIONARIOS/Create
     public IActionResult Create()
     {
+        ViewBag.User = _funcionarioRepository.Users.ToList();
+        ViewBag.Funcionarios = _funcionarioRepository.Funcionarios.ToList();
         return View();
     }
 
@@ -50,13 +52,17 @@ public class FuncionarioController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("FuncionarioId,Cpf,Nome,Telefone,Email,Logradouro,Numero,Bairro,Cidade,Cep,Complemento,Emprestimos")] Funcionario funcionario)
+    public async Task<IActionResult> Create([Bind("FuncionarioId,Cpf,Nome,Telefone,Email,Logradouro,Numero,Bairro,Cidade,Cep,Complemento,Emprestimos, IdentityUserId")] Funcionario funcionario)
     {
+        funcionario.User = _funcionarioRepository.Users.FirstOrDefault(u => u.Id == funcionario.IdentityUserId);
+        funcionario.Email = funcionario.User.Email;
         if (ModelState.IsValid)
         {
             await _funcionarioRepository.AddAsync(funcionario);
             return RedirectToAction(nameof(Index));
-        }
+        } 
+        ViewBag.User = _funcionarioRepository.Users.ToList();
+        ViewBag.Funcionarios = _funcionarioRepository.Funcionarios.ToList();
         return View(funcionario);
     }
 

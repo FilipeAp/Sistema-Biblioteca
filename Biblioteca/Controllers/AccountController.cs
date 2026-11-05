@@ -29,7 +29,7 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid) return View(loginVM);
 
-        var user = await _userManager.FindByNameAsync(loginVM.UserName);
+        var user = await _userManager.FindByNameAsync(loginVM.Email);
 
         if(user != null)
         {
@@ -58,7 +58,7 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = new IdentityUser { UserName = registroVM.UserName };
+            var user = new IdentityUser { UserName = registroVM.Email, Email = registroVM.Email };
             var result = await _userManager.CreateAsync(user, registroVM.Password);
 
             if (result.Succeeded)

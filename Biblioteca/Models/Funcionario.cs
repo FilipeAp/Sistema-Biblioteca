@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Biblioteca.Models;
 
@@ -26,6 +28,7 @@ public class Funcionario
     [DataType(DataType.PhoneNumber)]
     public string Telefone { get; set; }
 
+    [ValidateNever]
     [Required(ErrorMessage = "Informe o email.")]
     [StringLength(50)]
     [DataType(DataType.EmailAddress)]
@@ -61,6 +64,12 @@ public class Funcionario
     [StringLength(50, ErrorMessage = "Tamanho máximo atingido (50 caracteres)")]
     [Display(Name = "Complemento")]
     public string Complemento { get; set; }
+
+    public string IdentityUserId { get; set; } = string.Empty;
+
+    [ValidateNever]
+    public IdentityUser User { get; set; } = null!;
+
 
     public ICollection<Emprestimo> Emprestimos { get; set; } = new List<Emprestimo>();
 }
