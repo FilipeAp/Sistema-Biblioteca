@@ -9,15 +9,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 [Authorize]
 public class EmprestimoController : Controller
 {
     private readonly IEmprestimoRepository _emprestimoRepository;
+    private readonly IFuncionarioRepository _funcionarioRepository;
 
-    public EmprestimoController(IEmprestimoRepository emprestimoRepository)
+    public EmprestimoController(IEmprestimoRepository emprestimoRepository, IFuncionarioRepository funcionarioRepository)
     {
         _emprestimoRepository = emprestimoRepository;
+        _funcionarioRepository = funcionarioRepository;
     }
 
     // GET: EMPRESTIMOS
@@ -89,9 +92,10 @@ public class EmprestimoController : Controller
 
         return View(emprestimo);
     }
-
-    private void CarregarOpcoes(EmprestimoViewModel vm)
+    
+    private async Task CarregarOpcoes(EmprestimoViewModel vm)
     {
+        var FuncionarioAutenticado = await _funcionarioRepository.GetByIdentityUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
         vm.Copias = _emprestimoRepository.Copias.Where(c => c.Disponivel == true).Select(c =>
             new SelectListItem
             {
@@ -106,21 +110,24 @@ public class EmprestimoController : Controller
                 Text = u.Nome
             }).ToList();
 
-        vm.Funcionarios = _emprestimoRepository.Funcionarios.Select(f =>
-            new SelectListItem
-            {
-                Value = f.FuncionarioId.ToString(),
-                Text = f.Nome
-            }).ToList();
+        //vm.Funcionarios = _emprestimoRepository.Funcionarios.Select(f =>
+        //    new SelectListItem
+        //    {
+        //        Value = f.FuncionarioId.ToString(),
+        //        Text = f.Email
+        //    }).ToList();
+
+        vm.NomeFuncionario = FuncionarioAutenticado.Nome;
+        vm.EmailFuncionario = FuncionarioAutenticado.Email;
     }
 
     // GET: EMPRESTIMOS/Create
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         var vm = new EmprestimoViewModel();
 
-        CarregarOpcoes(vm);
+        await CarregarOpcoes(vm);
 
         return View(vm);
     }
@@ -132,7 +139,8 @@ public class EmprestimoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(EmprestimoViewModel vm)
     {
-
+        var FuncionarioAutenticado = await _funcionarioRepository.GetByIdentityUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        
         if (vm.CopiaIds.Count == 0)
         {
             ModelState.AddModelError(
@@ -152,7 +160,7 @@ public class EmprestimoController : Controller
             DataRetida = vm.DataRetida,
             PrevisaoDevolucao = vm.PrevisaoDevolucao,
             UsuarioId = vm.UsuarioId!.Value,
-            FuncionarioId = vm.FuncionarioId!.Value
+            FuncionarioId = FuncionarioAutenticado.FuncionarioId
         };
 
         try
@@ -172,86 +180,6 @@ public class EmprestimoController : Controller
         }
 
         return RedirectToAction(nameof(Index));
-    }
-
-    // GET: EMPRESTIMOS/Edit/5
-    [HttpGet]
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var emprestimo = await _emprestimoRepository.GetByIdAsync(id);
-        if (emprestimo == null)
-        {
-            return NotFound();
-        }
-
-        var vmEmprestimo = new EmprestimoViewModel()
-        {
-            EmprestimoId = emprestimo.EmprestimoId,
-            DataRetida = emprestimo.DataRetida,
-            PrevisaoDevolucao = emprestimo.PrevisaoDevolucao,
-            UsuarioId = emprestimo.UsuarioId,
-            FuncionarioId = emprestimo.FuncionarioId,
-            CopiaIds = emprestimo.Copias.Select(c => c.CopiaId).ToList()
-        };
-
-
-        CarregarOpcoes(vmEmprestimo);
-
-        return View(vmEmprestimo);
-    }
-
-    // POST: EMPRESTIMOS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, EmprestimoViewModel vmEmprestimo)
-    {
-        if (id == null|| id != vmEmprestimo.EmprestimoId)
-        {
-            return NotFound();
-        }
-
-        if (vmEmprestimo.CopiaIds.Count == 0)
-        {
-            ModelState.AddModelError(
-                nameof(vmEmprestimo.CopiaIds),
-                "Selecione pelo menos uma cópia.");
-        }
-
-        if (ModelState.IsValid)
-        {
-            var emprestimo = await _emprestimoRepository.GetByIdAsync(vmEmprestimo.EmprestimoId);
-
-            emprestimo.DataRetida = vmEmprestimo.DataRetida;
-            emprestimo.PrevisaoDevolucao = vmEmprestimo.PrevisaoDevolucao;
-            emprestimo.UsuarioId = vmEmprestimo.UsuarioId!.Value;
-            emprestimo.FuncionarioId = vmEmprestimo.FuncionarioId!.Value;
-
-            try
-            {
-                await _emprestimoRepository.UpdateEmprestimo(emprestimo, vmEmprestimo.CopiaIds);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmprestimoExists(emprestimo.EmprestimoId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        CarregarOpcoes(vmEmprestimo);
-        return View(vmEmprestimo);
     }
 
     // GET: EMPRESTIMOS/Delete/5

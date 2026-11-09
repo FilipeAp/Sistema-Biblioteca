@@ -2,6 +2,7 @@
 using Biblioteca.Repositories.Interfaces;
 using Biblioteca.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Biblioteca.Repositories;
 
@@ -21,9 +22,14 @@ public class FuncionarioRepository : IFuncionarioRepository
         _context.Add(funcionario);
         await _context.SaveChangesAsync();
     }
+
     public async Task<Funcionario?> GetByIdAsync(int? id)
     {
         return await _context.Funcionario.FindAsync(id);
+    }
+    public async Task<Funcionario?> GetByIdentityUserIdAsync(string identityUserId)
+    {
+        return await _context.Funcionario.FirstOrDefaultAsync(f => f.IdentityUserId == identityUserId);
     }
 
     public async Task UpdateFuncionario(Funcionario funcionario)

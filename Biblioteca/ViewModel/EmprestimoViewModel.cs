@@ -37,9 +37,9 @@ public class EmprestimoViewModel
     [Required(ErrorMessage = "Selecione um Leitor.")]
     public int? UsuarioId { get; set; }
 
-    [Display(Name = "Nome do Colaborador")]
-    [Required(ErrorMessage = "Selecione um Colaborador.")]
-    public int? FuncionarioId { get; set; }
+    public string NomeFuncionario { get; set; } = string.Empty;
+
+    public string EmailFuncionario { get; set; } = string.Empty;
 
 
     // IDs selecionados no formulário
@@ -53,7 +53,5 @@ public class EmprestimoViewModel
     public IEnumerable<SelectListItem> Usuarios { get; set; }
         = new List<SelectListItem>();
 
-    public IEnumerable<SelectListItem> Funcionarios { get; set; }
-        = new List<SelectListItem>();
 
 }

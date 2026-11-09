@@ -45,13 +45,12 @@
                   class="text-danger"></span>
 
                 <div class="form-group">
-                    <label asp-for="FuncionarioId" class="form-label">Colaborador</label>
-                    <select asp-for="FuncionarioId"
-                    asp-items="Model.Funcionarios"
-                    class="form-select">
-                        <option value="">Selecione um Colaborador</option>
-                    </select>
-                    <span asp-validation-for="FuncionarioId" class="text-danger"></span>
+                    <label class="form-label">Colaborador</label>
+
+                    <input asp-for="NomeFuncionario" value="@Model.NomeFuncionario" type="hidden" />
+                    <input asp-for="EmailFuncionario" value="@Model.EmailFuncionario" type="hidden" />
+                    <div  class="form-control bg-light text-muted">@Model.NomeFuncionario (@Model.EmailFuncionario)</div>
+                    
                 </div>
 
             <hr />
