@@ -1,43 +1,63 @@
 ﻿@using Biblioteca.ViewModel
 @model LoginViewModel
 
-<table class="table">
-    <tr>
-        <td><img src="~/images/login_48.png" alt="Fazer o Login" class="center-block" /></td>
-        <td>
-            <div class="row">
-                <div class="col-10 col-md-10 col-lg-10">
-                    <h4>Login</h4>
-                    <form asp-controller="Account" asp-action="Login" method="post" class="form-horizontal" role="form">
-                        <hr />
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        <input type="hidden" asp-for="ReturnUrl" />
-                        <div class="form-group">
-                            <label asp-for="Email" class="col-md-2 control-label"></label>
-                            <div class="col-md-6">
-                                <input asp-for="Email" class="form-control" type="email" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Password" class="col-md-2 control-label"></label>
-                            <div class="col-md-6">
-                                <input asp-for="Password" class="form-control" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-8">
-                                <input type="submit" class="btn btn-success" value="Log in" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </td>
-    </tr>
-</table>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+@{
+    Layout = null;
 }
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+
+    <title>Login - Lume</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="imgLogin">
+        <div class="TodaLogo">
+            <img src="~/BibliotecaLume.png" alt="logo" class="LogoLume">
+            <p class="p1">Lume</p>
+            <p class="p2">SISTEMA DA BIBLIOTECA</p>
+            <p class="p3">Mais do que livros, conectamos você a novos mundos.</p>
+        </div>
+    </div>
+    <div class="parte2">
+        <div class="login">
+            <div class="textos">
+                <p class="p1">BEM-VINDO DE VOLTA</p>
+                <h1>Acesse sua conta</h1>
+                <p class="p2">Entre com suas credenciais para acessar o painel administrativo.</p>
+            </div>
+
+            <form asp-controller="Account" asp-action="Login" method="post" role="form" class="formulario">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div class="campoPai">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" class="campo" placeholder="Digite seu email" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="campoPai">
+                    <label asp-for="Password">Senha</label>
+                    <input asp-for="Password" class="campo" placeholder="Digite sua senha" />
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <div class="campoPai">
+                    <input type="submit" class="entrar" value="Entrar" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+<html />

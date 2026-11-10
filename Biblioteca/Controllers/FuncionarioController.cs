@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 [Authorize]
+[Authorize(Roles = "Admin")]
 public class FuncionarioController : Controller
 {
     private readonly IFuncionarioRepository _funcionarioRepository;

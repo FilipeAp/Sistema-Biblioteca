@@ -43,4 +43,10 @@ public class FuncionarioRepository : IFuncionarioRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<bool> ExisteVinculoAsync(string identityUserId)
+    {
+        return await _context.Funcionario
+            .AnyAsync(f => f.IdentityUserId == identityUserId);
+    }
+
 }

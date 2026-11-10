@@ -1,4 +1,5 @@
 using Biblioteca.Context;
+using Biblioteca.Middleware;
 using Biblioteca.Repositories;
 using Biblioteca.Repositories.Interfaces;
 using Biblioteca.Services;
@@ -56,6 +57,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
+app.UseMiddleware<VerificarFuncionarioMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

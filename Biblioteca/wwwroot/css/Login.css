@@ -1,0 +1,170 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    background-color: #182f27;
+}
+
+.imgLogin {
+    height: 100%;
+    width: 50%;
+    background-image: url('/img/imgLogin.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    color: #efe6d9;
+    align-items: center;
+    padding-left: 155px;
+    padding-top: 19px;
+
+
+    & .TodaLogo {
+        height: 400px;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .LogoLume {
+            height: 120px;
+            width: 120px;
+        }
+
+        & .p1 {
+            font-size: 93px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 300;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        & .p2 {
+            font-family: "DM Sans", sans-serif;
+            font-size: 23px;
+            margin-top: 10px;
+        }
+
+        & .p3 {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 28px;
+            margin-top: 36px;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.3;
+        }
+    }
+}
+
+.parte2 {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login {
+    background-image: url(/img/FundoLogin.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 90%;
+    width: 62%;
+    padding: 15% 5% 0 5%;
+
+
+    & .textos {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 30%;
+    }
+
+    & h1 {
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #152f26;
+    }
+
+    & p {
+        font-size: 17px;
+        font-family: "DM Sans", sans-serif;
+    }
+
+
+    & .p1 {
+        color: #70886c;
+        margin: 0;
+    }
+
+    & .p2 {
+        color: #70796b;
+    }
+
+    & .formulario {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    & .campoPai {
+        width: 90%;
+        height: 70px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    & .campo {
+        height: 100%;
+        width: 100%;
+        border: 2px solid #b5afaa;
+        background-color: #F3E9DA;
+        border-radius: 5px;
+    }
+
+    & label {
+        font-size: 17px;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    & .entrar {
+        height: 75%;
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        background-color: #152f26;
+        color: #efe6d9;
+        font-family: "DM Sans", sans-serif;
+        font-weight: bold;
+        font-size: 20px;
+    }
+}
+& .voltar {
+    display: block;
+    width: fit-content;
+    margin: 0px auto 0;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    color: #152f26;
+    font-family: "DM Sans", sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+
+    & a:hover {
+        color: none;
+    }
+}

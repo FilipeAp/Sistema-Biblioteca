@@ -15,4 +15,6 @@ public interface IFuncionarioRepository
     Task UpdateFuncionario(Funcionario funcionario);
     Task DeletaFuncionario(Funcionario funcionario);
     Task<Funcionario?> GetByIdentityUserIdAsync(string identityUserId);
+
+    Task<bool> ExisteVinculoAsync(string identityUserId);
 }

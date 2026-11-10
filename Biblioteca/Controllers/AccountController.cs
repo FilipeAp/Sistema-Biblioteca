@@ -65,7 +65,7 @@ public class AccountController : Controller
             {
                 //await _signInManager.SignInAsync(user, isPersistent: false); -> susuário já fica autenticado, mas lembre que abaixo ele joga pra tela de login.
                 await _userManager.AddToRoleAsync(user, "Member");
-                return RedirectToAction("Login", "Account");
+                TempData["Sucesso"] = "Colaborador cadastrado com sucesso!";
 
             }
             else

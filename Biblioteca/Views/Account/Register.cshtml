@@ -2,35 +2,81 @@
 
 @model LoginViewModel
 
-<table class="table">
-    <tr>
-        <td><img src="~/images/registro1.jpg" alt="Registrar Usuário" /></td>
-        <td>
-            <div class="row">
-                <div class="col-10 col-md-10 col-lg-10">
-                    <h4>Registrar usuário</h4>
-                    <form asp-controller="Account" asp-action="Register" method="post">
-                        <hr />
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="Email"> </label>
-                            <input asp-for="Email" class="form-control" type="email" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Password"></label>
-                            <input asp-for="Password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-success " value="Registrar" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </td>
-    <tr>
-</table>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+@{
+    Layout = null;
 }
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+
+    <title>Login - Lume</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+
+<body>
+    <div class="imgLogin">
+        <div class="TodaLogo">
+            <img src="~/BibliotecaLume.png" alt="logo" class="LogoLume">
+            <p class="p1">Lume</p>
+            <p class="p2">SISTEMA DA BIBLIOTECA</p>
+            <p class="p3">Mais do que livros, conectamos você a novos mundos.</p>
+        </div>
+    </div>
+    <div class="parte2">
+        <div class="login">
+            <div class="textos">
+                <p class="p1">GESTÃO DE ACESSOS</p>
+                <h1>Cadastre um novo colaborador</h1>
+                <p class="p2">Preencha os dados para criar as credenciais de acesso de um novo integrante da equipe Lume.</p>
+            </div>
+
+            <form asp-controller="Account" asp-action="Register" method="post" role="form" class="formulario">
+                <div class="campoPai">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" class="campo" placeholder="Digite seu email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="campoPai">
+                    <label asp-for="Password">Senha</label>
+                    <input asp-for="Password" class="campo" placeholder="Digite sua senha" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="campoPai">
+                    <input type="submit" class="entrar" value="Registrar" />
+                </div>
+            </form>
+            <a href="javascript:history.back()" class="voltar">Voltar</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+
+<script>
+    @if (TempData["Sucesso"] != null)
+        {
+            <text>
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(TempData["Sucesso"])),
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    scrollbarPadding: false,
+                    heightAuto: false
+                });
+        </text>
+    }
+</script>
