@@ -19,6 +19,7 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+    <link rel="icon" href="~/BibliotecaLume.png">
 </head>
 <body>
     <div class="imgLogin">
@@ -38,7 +39,6 @@
             </div>
 
             <form asp-controller="Account" asp-action="Login" method="post" role="form" class="formulario">
-                <div asp-validation-summary="All" class="text-danger"></div>
                 <input type="hidden" asp-for="ReturnUrl" />
                 <div class="campoPai">
                     <label asp-for="Email">Email</label>

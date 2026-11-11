@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="icon" href="~/BibliotecaLume.png">
 </head>
 
 <body>
@@ -56,7 +57,7 @@
                     <input type="submit" class="entrar" value="Registrar" />
                 </div>
             </form>
-            <a href="javascript:history.back()" class="voltar">Voltar</a>
+            <a asp-controller="Emprestimo" asp-action="Index" class="voltar">Voltar</a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

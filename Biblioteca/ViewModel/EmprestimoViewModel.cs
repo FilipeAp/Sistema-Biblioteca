@@ -34,7 +34,7 @@ public class EmprestimoViewModel
     public decimal Multa { get; set; }
 
     [Display(Name = "Nome do Leitor")]
-    [Required(ErrorMessage = "Selecione um Leitor.")]
+    [Required(ErrorMessage = "Selecione um Leitor")]
     public int? UsuarioId { get; set; }
 
     public string NomeFuncionario { get; set; } = string.Empty;
@@ -44,6 +44,8 @@ public class EmprestimoViewModel
 
     // IDs selecionados no formulário
     [Display(Name = "ID da cópia")]
+    [Required(ErrorMessage = "Selecione pelo menos uma cópia")]
+    [MinLength(1, ErrorMessage = "Selecione pelo menos uma cópia")]
     public List<int> CopiaIds { get; set; } = new();
 
     // Opções exibidas nos campos de seleção

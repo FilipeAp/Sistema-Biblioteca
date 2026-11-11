@@ -41,8 +41,7 @@
                 <span asp-validation-for="Multa" class="text-danger"></span>
             </div> *@
             
-            <span asp-validation-for="UsuarioId"
-                  class="text-danger"></span>
+            
 
                 <div class="form-group">
                     <label class="form-label">Colaborador</label>
@@ -60,7 +59,8 @@
                    id="buscaLeitor"
                    class="form-control mb-2"
                    placeholder="Digite o nome do leitor..." />
-
+            <span asp-validation-for="UsuarioId"
+                  class="text-danger"></span>
             <div class="border rounded p-3 fundoCheckbox"
                  style="max-height: 220px; overflow-y: auto;"
                  id="listaLeitores">
@@ -70,11 +70,12 @@
                 {
                     <div class="form-check item-leitor">
                         <input class="form-check-input"
+                               asp-for="UsuarioId"
                                type="radio"
                                name="UsuarioId"
                                value="@usuario.Value"
                                id="usuario_@usuario.Value"
-                               required />
+                               />
 
                         <label class="form-check-label"
                                for="usuario_@usuario.Value">
@@ -91,6 +92,8 @@
                 class="form-control mb-2"
                 placeholder="Buscar ID da Cópia..." />
 
+                <span asp-validation-for="CopiaIds"
+                  class="text-danger"></span>
 
                 <div class="border rounded p-3 fundoCheckbox"
                 style="max-height: 220px; overflow-y: auto;">
