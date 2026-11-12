@@ -2,40 +2,247 @@
 
 @{
     ViewData["Title"] = "Categorias";
+    var categorias = Model?.ToList() ?? new List<Biblioteca.Models.Categoria>();
 }
 
-<h1>Categorias</h1>
-
-<a asp-action="Create" class="btn btn-success btn-sm">
-    Registrar Nova Categoria
-</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NomeCategoria)
-            </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.Livros)
-            </th> *@
-            <th>Opções</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.NomeCategoria)
-            </td>
-            @* <td>
-                @Html.DisplayFor(model => item.Livros)
-            </td> *@
-            <td>
-                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.CategoriaId">Editar</a> 
-                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.CategoriaId">Detalhes</a> 
-                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.CategoriaId">Deletar</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<div class="lume-page">
+
+    <!-- CABEÇALHO -->
+    <section class="lume-page-header">
+        <div class="lume-page-heading">
+            <span class="lume-page-label">
+                <i class="bi bi-bookmark"></i>
+                Organização do acervo
+            </span>
+
+            <h1>Categorias</h1>
+            <p>Gerencie as categorias utilizadas para organizar os livros da biblioteca.</p>
+        </div>
+
+        <a asp-action="Create" class="lume-btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Registrar Categoria
+        </a>
+    </section>
+
+    <!-- LISTAGEM -->
+    <section class="lume-list-card">
+
+        <div class="lume-list-header">
+            <div class="lume-list-title">
+                <i class="bi bi-bookmarks"></i>
+                <h2>Categorias cadastradas</h2>
+            </div>
+
+            <div class="lume-list-search">
+                <i class="bi bi-search"></i>
+                <input type="search"
+                       id="buscarCategoria"
+                       placeholder="Buscar categoria..."
+                       autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="lume-table-responsive">
+            <table class="lume-table" id="tabelaCategorias">
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="bi bi-bookmark"></i>
+                            Nome da categoria
+                        </th>
+                        <th>
+                            <i class="bi bi-gear"></i>
+                            Opções
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in categorias)
+                    {
+                        <tr class="item-categoria">
+                            <td>
+                                @Html.DisplayFor(model => item.NomeCategoria)
+                            </td>
+
+                            <td>
+                                <div class="lume-table-actions">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.CategoriaId"
+                                       class="lume-btn-action lume-btn-details">
+                                        <i class="bi bi-eye"></i>
+                                        Detalhes
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.CategoriaId"
+                                       class="lume-btn-action lume-btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.CategoriaId"
+                                       class="lume-btn-action lume-btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                        Deletar
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- ESTADO VAZIO -->
+            <div id="categoriasSemResultado" class="lume-empty-state" hidden>
+                <i class="bi bi-search"></i>
+                <p>Nenhuma categoria encontrada.</p>
+            </div>
+        </div>
+
+        <!-- RODAPÉ E PAGINAÇÃO -->
+        <div class="lume-table-footer">
+            <span id="resumoCategorias">
+                Mostrando registros
+            </span>
+
+            <nav aria-label="Paginação das categorias">
+                <ul id="paginacaoCategorias" class="lume-pagination"></ul>
+            </nav>
+        </div>
+
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const campoBusca = document.getElementById("buscarCategoria");
+            const tabela = document.getElementById("tabelaCategorias");
+            const linhas = Array.from(document.querySelectorAll(".item-categoria"));
+            const paginacao = document.getElementById("paginacaoCategorias");
+            const resumo = document.getElementById("resumoCategorias");
+            const mensagemVazia = document.getElementById("categoriasSemResultado");
+
+            const itensPorPagina = 10;
+
+            let paginaAtual = 1;
+            let categoriasFiltradas = [...linhas];
+
+            function renderizarTabela() {
+
+                const total = categoriasFiltradas.length;
+                const totalPaginas = Math.ceil(total / itensPorPagina);
+
+                paginaAtual = Math.max(1, Math.min(paginaAtual, totalPaginas || 1));
+
+                // Esconde todas as linhas
+                linhas.forEach(linha => {
+                    linha.style.display = "none";
+                });
+
+                // Calcula os registros da página atual
+                const inicio = (paginaAtual - 1) * itensPorPagina;
+                const fim = Math.min(inicio + itensPorPagina, total);
+
+                // Exibe somente os registros da página
+                categoriasFiltradas.slice(inicio, fim).forEach(linha => {
+                    linha.style.display = "";
+                });
+
+                // Atualiza o resumo
+                resumo.textContent = total === 0
+                    ? "Nenhum registro encontrado"
+                    : `Mostrando ${inicio + 1} a ${fim} de ${total} categorias`;
+
+                // Controla a mensagem de estado vazio
+                mensagemVazia.hidden = total !== 0;
+                tabela.style.display = total === 0 ? "none" : "table";
+
+                renderizarBotoes(totalPaginas);
+            }
+
+            function adicionarBotao(texto, pagina, desabilitado = false, ativo = false) {
+
+                const li = document.createElement("li");
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+                botao.textContent = texto;
+                botao.disabled = desabilitado;
+
+                if (ativo) {
+                    botao.classList.add("active");
+                    botao.setAttribute("aria-current", "page");
+                }
+
+                botao.addEventListener("click", function () {
+
+                    if (desabilitado) return;
+
+                    paginaAtual = pagina;
+                    renderizarTabela();
+                });
+
+                li.appendChild(botao);
+                paginacao.appendChild(li);
+            }
+
+            function renderizarBotoes(totalPaginas) {
+
+                paginacao.innerHTML = "";
+
+                if (totalPaginas <= 1) return;
+
+                // Botão anterior
+                adicionarBotao("‹", paginaAtual - 1, paginaAtual === 1);
+
+                // Exibe até cinco números de páginas
+                let inicio = Math.max(1, paginaAtual - 2);
+                let fim = Math.min(totalPaginas, inicio + 4);
+
+                inicio = Math.max(1, fim - 4);
+
+                for (let i = inicio; i <= fim; i++) {
+                    adicionarBotao(i, i, false, i === paginaAtual);
+                }
+
+                // Botão próximo
+                adicionarBotao("›", paginaAtual + 1, paginaAtual === totalPaginas);
+            }
+
+            // Busca em tempo real
+            campoBusca.addEventListener("input", function () {
+
+                const pesquisa = campoBusca.value
+                    .trim()
+                    .toLocaleLowerCase("pt-BR");
+
+                categoriasFiltradas = linhas.filter(linha =>
+                    linha.textContent
+                        .toLocaleLowerCase("pt-BR")
+                        .includes(pesquisa)
+                );
+
+                // Retorna à primeira página após pesquisar
+                paginaAtual = 1;
+
+                renderizarTabela();
+            });
+
+            // Inicializa a listagem
+            renderizarTabela();
+        });
+    </script>
+}

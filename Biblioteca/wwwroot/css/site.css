@@ -165,7 +165,7 @@ th {
     width: 260px;
     height: 100vh;
     background: var(--lume-green);
-    color: var(--lume-text);
+    color: var(--lume-sidebar-text);
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -187,7 +187,7 @@ th {
         flex-direction: column;
         align-items: center;
         text-decoration: none;
-        color: var(--lume-text);
+        color: var(--lume-sidebar-text);
     }
 
     .sidebar-brand img {
@@ -225,7 +225,7 @@ th {
     gap: 15px;
     min-height: 50px;
     padding: 12px 18px;
-    color: var(--lume-text);
+    color: var(--lume-sidebar-text);
     text-decoration: none;
     font-size: 16px;
     border-radius: 12px;
@@ -328,7 +328,7 @@ th {
     align-items: center;
     gap: 12px;
     padding: 10px 12px;
-    color: #d6c6a9;
+    color: var(--lume-sidebar-muted);
     text-decoration: none;
     font-size: 14px;
     border-radius: 8px;
@@ -416,7 +416,7 @@ th {
 }
 
 .sidebar-account-name {
-    color: #f5ecdc;
+    color: var(--lume-sidebar-text);
     font-family: inherit;
     font-size: 13px;
     font-weight: 600;
@@ -777,5 +777,505 @@ body {
         inset: 0;
         background: rgba(0, 0, 0, 0.45);
         z-index: 999;
+    }
+}
+
+/* =========================================
+   BIBLIOTECA LUME - PADRÃO GLOBAL DE LISTAGEM
+========================================= */
+
+:root {
+    --lume-green: #17372c;
+    --lume-green-hover: #285442;
+    --lume-gold: #c49a5a;
+    --lume-cream: #f7efe4;
+    --lume-card: #fffaf3;
+    --lume-border: #e6d5bf;
+    --lume-border-light: #eee3d6;
+    --lume-text: #172d25;
+    --lume-muted: #777064;
+    --lume-sidebar-text: #f5ecdc;
+    --lume-sidebar-muted: #d6c6a9;
+}
+
+/* =========================================
+   PÁGINA
+========================================= */
+
+.lume-page {
+    width: 100%;
+    color: var(--lume-text);
+}
+
+/* =========================================
+   CABEÇALHO DA PÁGINA
+========================================= */
+
+.lume-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 5px 25px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #e8d9c5;
+}
+
+.lume-page-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.lume-page-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a4773e;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.lume-page-heading h1 {
+    font-family: 'Literata', serif;
+    font-size: clamp(30px, 4vw, 42px);
+    font-weight: 700;
+    color: var(--lume-text);
+    margin: 0;
+}
+
+.lume-page-heading p {
+    font-family: 'Quattrocento', serif;
+    font-size: 15px;
+    color: #5d574d;
+    margin: 0;
+}
+
+/* =========================================
+   BOTÃO PRINCIPAL
+========================================= */
+
+.lume-btn-primary {
+    min-height: 44px;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: 1px solid var(--lume-green);
+    border-radius: 10px;
+    background: var(--lume-green);
+    color: #fff8e9;
+    font-family: 'Quattrocento', serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+    .lume-btn-primary:hover {
+        background: var(--lume-green-hover);
+        border-color: var(--lume-green-hover);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+/* =========================================
+   CARD DA LISTAGEM
+========================================= */
+
+.lume-list-card {
+    width: 100%;
+    min-width: 0;
+    padding: 22px;
+    background: var(--lume-card);
+    border: 1px solid var(--lume-border);
+    border-radius: 17px;
+    box-shadow: 0 5px 20px rgba(65, 43, 18, 0.04);
+}
+
+/* =========================================
+   CABEÇALHO DO CARD
+========================================= */
+
+.lume-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.lume-list-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+    .lume-list-title > i {
+        color: var(--lume-green);
+        font-size: 26px;
+    }
+
+    .lume-list-title h2 {
+        margin: 0;
+        color: var(--lume-text);
+        font-family: 'Literata', serif;
+        font-size: 21px;
+        font-weight: 700;
+    }
+
+/* =========================================
+   BUSCA
+========================================= */
+
+.lume-list-search {
+    height: 42px;
+    width: min(300px, 100%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    border: 1px solid #dfd0bc;
+    border-radius: 25px;
+    background: var(--lume-card);
+    color: #34463b;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+    .lume-list-search:focus-within {
+        border-color: var(--lume-gold);
+        box-shadow: 0 0 0 3px rgba(196, 154, 90, .12);
+    }
+
+    .lume-list-search i {
+        font-size: 16px;
+    }
+
+    .lume-list-search input {
+        width: 100%;
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--lume-text);
+        font-family: inherit;
+        font-size: 13px;
+    }
+
+        .lume-list-search input::placeholder {
+            color: #888176;
+        }
+
+/* =========================================
+   TABELA
+========================================= */
+
+.lume-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+}
+
+.lume-table {
+    width: 100%;
+    min-width: 650px;
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    vertical-align: middle;
+    color: var(--lume-text);
+}
+
+    /* Cabeçalho */
+
+    .lume-table thead th {
+        padding: 14px 12px;
+        background: var(--lume-green);
+        color: #fff8e9;
+        border: none;
+        font-family: 'Quattrocento', serif;
+        font-size: 15px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+        .lume-table thead th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .lume-table thead th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        /* Ícones do cabeçalho */
+
+        .lume-table thead th i {
+            margin-right: 5px;
+            font-size: 15px;
+        }
+
+    /* Células */
+
+    .lume-table tbody td {
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--lume-border-light);
+        color: #282b27;
+        font-family: 'Alike', serif;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    /* Linhas */
+
+    .lume-table tbody tr {
+        transition: background .2s ease;
+    }
+
+        .lume-table tbody tr:hover {
+            background: #f5ecdf;
+        }
+
+        .lume-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+/* =========================================
+   BOTÕES DE AÇÃO
+========================================= */
+
+.lume-table-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.lume-btn-action {
+    min-height: 34px;
+    padding: 6px 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-family: 'Alike', serif;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+/* Detalhes */
+
+.lume-btn-details {
+    background: var(--lume-green);
+    border-color: var(--lume-green);
+    color: #fff8e9;
+}
+
+    .lume-btn-details:hover {
+        background: var(--lume-green-hover);
+        color: white;
+    }
+
+/* Editar */
+
+.lume-btn-edit {
+    background: #f5ead8;
+    border-color: #c49a5a;
+    color: #785323;
+}
+
+    .lume-btn-edit:hover {
+        background: #e9d6b7;
+        color: #573b18;
+    }
+
+/* Deletar */
+
+.lume-btn-delete {
+    background: transparent;
+    border-color: #d99a91;
+    color: #bd3832;
+}
+
+    .lume-btn-delete:hover {
+        background: #f9e5e1;
+        color: #a51f1a;
+    }
+
+/* =========================================
+   BADGES
+========================================= */
+
+.lume-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 11px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.lume-badge-success {
+    background: #dce9d8;
+    color: #245438;
+    gap: 5px;
+}
+
+.lume-badge-danger {
+    background: #f6dfdb;
+    color: #a52e27;
+    gap: 5px;
+}
+
+.lume-badge-warning {
+    background: #f8e2c5;
+    color: #925416;
+}
+
+.lume-badge-neutral {
+    background: #e4e1db;
+    color: #57544d;
+}
+
+/* =========================================
+   RODAPÉ DA TABELA
+========================================= */
+
+.lume-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 18px;
+}
+
+    .lume-table-footer > span {
+        color: #70695f;
+        font-size: 13px;
+    }
+
+/* Paginação */
+
+.lume-pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+    .lume-pagination li {
+        display: inline-flex;
+    }
+
+    .lume-pagination button {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #dfd0bd;
+        border-radius: 8px;
+        background: var(--lume-card);
+        color: #34463b;
+        font-family: inherit;
+        font-size: 13px;
+        transition: all .2s ease;
+    }
+
+        .lume-pagination button:hover:not(:disabled) {
+            background: #e9dfd0;
+        }
+
+        .lume-pagination button.active {
+            background: var(--lume-green);
+            color: #fff8e9;
+            border-color: var(--lume-green);
+        }
+
+        .lume-pagination button:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+/* Paginação Bootstrap, caso seja utilizada */
+
+.lume-pagination-bootstrap .page-link {
+    border-color: #dfd0bd;
+    background: var(--lume-card);
+    color: var(--lume-green);
+}
+
+.lume-pagination-bootstrap .page-item.active .page-link {
+    background: var(--lume-green);
+    border-color: var(--lume-green);
+    color: #fff8e9;
+}
+
+/* =========================================
+   SEM RESULTADOS
+========================================= */
+
+.lume-empty-state {
+    padding: 35px 15px;
+    text-align: center;
+    color: #81786b;
+}
+
+    .lume-empty-state i {
+        font-size: 30px;
+    }
+
+    .lume-empty-state p {
+        margin: 8px 0 0;
+        font-size: 14px;
+    }
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .lume-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 15px 0 20px;
+    }
+
+    .lume-list-card {
+        padding: 15px;
+    }
+
+    .lume-list-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .lume-list-search {
+        width: 100%;
+    }
+
+    .lume-table-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .lume-table-actions {
+        flex-wrap: wrap;
+    }
+
+    .lume-btn-primary {
+        width: 100%;
     }
 }

@@ -2,91 +2,382 @@
 
 @{
     ViewData["Title"] = "Autores";
+
+    var autores = Model?.ToList() ?? new List<Biblioteca.Models.Autor>();
 }
 
-<h1>Autores</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+}
 
-<a asp-action="Create" class="btn btn-success btn-sm">
-    Registrar Novo Autor
-</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NomeAutor)
-            </th>
-            
-            <th>
-                Qtd. de Livros
-            </th>
-            <th>Opções</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="lume-page">
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.NomeAutor)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Livros.Count)
-            </td>
-            <td>
-                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.AutorId">Editar</a> 
-                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.AutorId">Detalhes</a> 
-                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.AutorId">Deletar</a>
-            </td>
-        </tr>
-    }
-@* IMPLEMENTAÇÕES FUTURAS:
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @if(item.Pseudonimos.Count > 0){
-                    <details>
-                        <summary>@Html.DisplayFor(model => item.NomeAutor)</summary>
-                        <table class="table">
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Pseudonimos)
-                                </th>
-                            </tr>
-                            @foreach (var pseudonimo in item.Pseudonimos)
-                            {
-                                <tr>
-                                    <td>@Html.DisplayFor(p => pseudonimo.NomePseudonimo)</td>
-                                    <td>
-                                    <a asp-controller="Pseudonimo" asp-action="Edit" asp-route-id="@pseudonimo.PseudonimoId">Edit</a> |
-                                    <a asp-controller="Pseudonimo" asp-action="Details" asp-route-id="@pseudonimo.PseudonimoId">Details</a> |
-                                    <a asp-controller="Pseudonimo" asp-action="Delete" asp-route-id="@pseudonimo.PseudonimoId">Delete</a> |
-                                    
-                                </td>
-                                </tr>
-                            }
-                        </table>
-                            <a asp-controller="Pseudonimo" asp-action="Create" asp-route-id="@item.AutorId">Add Pseudônimo</a>
-                    </details>
-                }
-                else
-                {
-                    @Html.DisplayFor(model => item.NomeAutor)   
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Livros)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AutorId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AutorId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.AutorId">Delete</a> |
-                    @if(item.Pseudonimos.Count == 0)
+    <!-- CABEÇALHO -->
+    <section class="lume-page-header">
+
+        <div class="lume-page-heading">
+
+            <span class="lume-page-label">
+                <i class="bi bi-pen"></i>
+                Acervo literário
+            </span>
+
+            <h1>Autores</h1>
+
+            <p>
+                Gerencie os autores cadastrados na biblioteca.
+            </p>
+
+        </div>
+
+        <a asp-action="Create" class="lume-btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Registrar Autor
+        </a>
+
+    </section>
+
+
+    <!-- LISTAGEM -->
+    <section class="lume-list-card">
+
+        <!-- CABEÇALHO DO CARD -->
+        <div class="lume-list-header">
+
+            <div class="lume-list-title">
+                <i class="bi bi-people"></i>
+                <h2>Autores cadastrados</h2>
+            </div>
+
+            <div class="lume-list-search">
+                <i class="bi bi-search"></i>
+
+                <input type="search"
+                       id="buscarAutor"
+                       placeholder="Buscar autor..."
+                       autocomplete="off" />
+            </div>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="lume-table-responsive">
+
+            <table class="lume-table" id="tabelaAutores">
+
+                <thead>
+                    <tr>
+
+                        <th>
+                            <i class="bi bi-person"></i>
+                            Nome do autor
+                        </th>
+
+                        <th>
+                            <i class="bi bi-book"></i>
+                            Qtd. de livros
+                        </th>
+
+                        <th>
+                            <i class="bi bi-gear"></i>
+                            Opções
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in autores)
                     {
-                        <a asp-controller="Pseudonimo" asp-action="Create" asp-route-id="@item.AutorId">Add Pseudônimo</a>
+                        <tr class="item-autor">
+
+                            <td>
+                                @Html.DisplayFor(model => item.NomeAutor)
+                            </td>
+
+                            <td>
+                                <span class="lume-badge lume-badge-neutral">
+                                    <i class="bi bi-book-half me-1"></i>
+                                    @(item.Livros?.Count ?? 0)
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="lume-table-actions">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.AutorId"
+                                       class="lume-btn-action lume-btn-details">
+
+                                        <i class="bi bi-eye"></i>
+                                        Detalhes
+
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.AutorId"
+                                       class="lume-btn-action lume-btn-edit">
+
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.AutorId"
+                                       class="lume-btn-action lume-btn-delete">
+
+                                        <i class="bi bi-trash"></i>
+                                        Deletar
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
                     }
-            </td>
-        </tr>
-} *@
-    </tbody>
-</table>
+
+                </tbody>
+
+            </table>
+
+            <!-- ESTADO VAZIO -->
+            <div id="autoresSemResultado"
+                 class="lume-empty-state"
+                 hidden>
+
+                <i class="bi bi-search"></i>
+
+                <p>Nenhum autor encontrado.</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- RODAPÉ -->
+        <div class="lume-table-footer">
+
+            <span id="resumoAutores">
+                Mostrando registros
+            </span>
+
+            <nav aria-label="Paginação dos autores">
+
+                <ul id="paginacaoAutores" class="lume-pagination">
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- BUSCA E PAGINAÇÃO -->
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const campo = document.getElementById("buscarAutor");
+
+            const tabela = document.getElementById("tabelaAutores");
+
+            const linhas = Array.from(
+                document.querySelectorAll(".item-autor")
+            );
+
+            const paginacao = document.getElementById("paginacaoAutores");
+
+            const resumo = document.getElementById("resumoAutores");
+
+            const mensagem = document.getElementById("autoresSemResultado");
+
+            const itensPorPagina = 10;
+
+            let paginaAtual = 1;
+
+            let autoresFiltrados = [...linhas];
+
+
+            // RENDERIZAR TABELA
+            function renderizarTabela() {
+
+                const total = autoresFiltrados.length;
+
+                const totalPaginas = Math.ceil(total / itensPorPagina);
+
+                paginaAtual = Math.max(
+                    1,
+                    Math.min(paginaAtual, totalPaginas || 1)
+                );
+
+
+                // Ocultar todas as linhas
+                linhas.forEach(linha => {
+                    linha.style.display = "none";
+                });
+
+
+                // Calcular registros da página atual
+                const inicio = (paginaAtual - 1) * itensPorPagina;
+
+                const fim = Math.min(inicio + itensPorPagina, total);
+
+
+                // Exibir somente os registros da página
+                autoresFiltrados.slice(inicio, fim).forEach(linha => {
+                    linha.style.display = "";
+                });
+
+
+                // Atualizar resumo
+                resumo.textContent = total === 0
+                    ? "Nenhum registro encontrado"
+                    : `Mostrando ${inicio + 1} a ${fim} de ${total} autores`;
+
+
+                // Estado vazio
+                mensagem.hidden = total !== 0;
+
+                tabela.style.display = total === 0 ? "none" : "table";
+
+
+                // Atualizar paginação
+                renderizarBotoes(totalPaginas);
+
+            }
+
+
+            // CRIAR BOTÕES DE PAGINAÇÃO
+            function adicionarBotao(texto, pagina, desabilitado = false, ativo = false) {
+
+                const li = document.createElement("li");
+
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+
+                botao.textContent = texto;
+
+                botao.disabled = desabilitado;
+
+
+                if (ativo) {
+
+                    botao.classList.add("active");
+
+                    botao.setAttribute("aria-current", "page");
+
+                }
+
+
+                botao.addEventListener("click", function () {
+
+                    if (desabilitado) return;
+
+                    paginaAtual = pagina;
+
+                    renderizarTabela();
+
+                });
+
+
+                li.appendChild(botao);
+
+                paginacao.appendChild(li);
+
+            }
+
+
+            // RENDERIZAR PAGINAÇÃO
+            function renderizarBotoes(totalPaginas) {
+
+                paginacao.innerHTML = "";
+
+                if (totalPaginas <= 1) return;
+
+
+                // Botão anterior
+                adicionarBotao(
+                    "‹",
+                    paginaAtual - 1,
+                    paginaAtual === 1
+                );
+
+
+                // Limitar quantidade de números exibidos
+                let inicio = Math.max(1, paginaAtual - 2);
+
+                let fim = Math.min(totalPaginas, inicio + 4);
+
+                inicio = Math.max(1, fim - 4);
+
+
+                // Números das páginas
+                for (let i = inicio; i <= fim; i++) {
+
+                    adicionarBotao(
+                        i,
+                        i,
+                        false,
+                        i === paginaAtual
+                    );
+
+                }
+
+
+                // Botão próximo
+                adicionarBotao(
+                    "›",
+                    paginaAtual + 1,
+                    paginaAtual === totalPaginas
+                );
+
+            }
+
+
+            // BUSCA DE AUTORES
+            campo.addEventListener("input", function () {
+
+                const termo = campo.value
+                    .trim()
+                    .toLocaleLowerCase("pt-BR");
+
+
+                autoresFiltrados = linhas.filter(linha =>
+
+                    linha.textContent
+                        .toLocaleLowerCase("pt-BR")
+                        .includes(termo)
+
+                );
+
+
+                // Voltar para a primeira página após pesquisar
+                paginaAtual = 1;
+
+                renderizarTabela();
+
+            });
+
+
+            // Inicialização
+            renderizarTabela();
+
+        });
+
+    </script>
+
+}

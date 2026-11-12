@@ -2,100 +2,234 @@
 
 @{
     ViewData["Title"] = "Editoras";
+    var editoras = Model?.ToList() ?? new List<Biblioteca.Models.Editora>();
 }
 
-<h1>Editoras</h1>
-
-<a asp-action="Create" class="btn btn-success btn-sm">
-    Registrar Nova Editora
-</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NomeEditora)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CnpjEditora)
-            </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.CnpjMatriz)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Logradouro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Numero)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bairro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cidade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cep)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Complemento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Livros)
-            </th> *@
-            <th>Opções</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.NomeEditora)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.CnpjEditora)
-            </td>
-            @* <td>
-                @Html.DisplayFor(model => item.CnpjMatriz)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Logradouro)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Numero)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Bairro)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Cidade)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Cep)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Complemento)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Livros)
-            </td> *@
-            <td>
-                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.EditoraId">Editar</a> 
-                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.EditoraId">Detalhes</a> 
-                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.EditoraId">Deletar</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" />
 }
-    </tbody>
-</table>
+
+<div class="lume-page">
+
+    <div class="lume-page-header">
+        <div class="lume-page-heading">
+            <span class="lume-page-label">
+                <i class="bi bi-building"></i>
+                Gestão do acervo
+            </span>
+
+            <h1>Editoras</h1>
+            <p>Gerencie as editoras responsáveis pelas publicações do acervo.</p>
+        </div>
+
+        <a asp-action="Create" class="lume-btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Registrar Editora
+        </a>
+    </div>
+
+    <div class="lume-list-card">
+
+        <div class="lume-list-header">
+            <div>
+                <h2 class="lume-list-title">Editoras cadastradas</h2>
+                <span class="lume-list-subtitle">
+                    Consulte e gerencie os dados das editoras.
+                </span>
+            </div>
+
+            <div class="lume-list-search">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       id="buscarEditora"
+                       placeholder="Buscar por nome, telefone, e-mail ou CNPJ..." />
+            </div>
+        </div>
+
+        <div class="lume-table-responsive">
+            <table class="lume-table">
+                <thead>
+                    <tr>
+                        <th>Editora</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                        <th>CNPJ</th>
+                        <th class="text-end">Opções</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabelaEditoras">
+                    @foreach (var item in editoras)
+                    {
+                        <tr class="item-editora">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="lume-table-icon">
+                                        <i class="bi bi-building"></i>
+                                    </span>
+                                    <span>@item.NomeEditora</span>
+                                </div>
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Telefone)
+                                    ? "—"
+                                    : item.Telefone)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Email)
+                                    ? "—"
+                                    : item.Email)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.CnpjEditora)
+                                    ? "—"
+                                    : item.CnpjEditora)
+                            </td>
+
+                            <td>
+                                <div class="lume-table-actions">
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.EditoraId"
+                                       class="lume-btn-action lume-btn-details"
+                                       title="Detalhes">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.EditoraId"
+                                       class="lume-btn-action lume-btn-edit"
+                                       title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.EditoraId"
+                                       class="lume-btn-action lume-btn-delete"
+                                       title="Excluir">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div id="editorasSemResultado" class="lume-empty-state" hidden>
+            <i class="bi bi-building"></i>
+            <p>Nenhuma editora encontrada.</p>
+        </div>
+
+        <div class="lume-table-footer">
+            <span id="resumoEditoras"></span>
+
+            <nav aria-label="Paginação de editoras">
+                <ul id="paginacaoEditoras" class="lume-pagination"></ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const itensPorPagina = 10;
+
+            const campoBusca = document.getElementById("buscarEditora");
+            const linhas = Array.from(document.querySelectorAll(".item-editora"));
+            const tabela = document.getElementById("tabelaEditoras");
+            const paginacao = document.getElementById("paginacaoEditoras");
+            const resumo = document.getElementById("resumoEditoras");
+            const semResultado = document.getElementById("editorasSemResultado");
+
+            let paginaAtual = 1;
+            let editorasFiltradas = [...linhas];
+
+            function atualizarTabela() {
+                const total = editorasFiltradas.length;
+                const totalPaginas = Math.ceil(total / itensPorPagina);
+
+                if (paginaAtual > totalPaginas) {
+                    paginaAtual = Math.max(1, totalPaginas);
+                }
+
+                const inicio = (paginaAtual - 1) * itensPorPagina;
+                const fim = Math.min(inicio + itensPorPagina, total);
+
+                linhas.forEach(linha => linha.hidden = true);
+
+                editorasFiltradas
+                    .slice(inicio, fim)
+                    .forEach(linha => linha.hidden = false);
+
+                tabela.hidden = total === 0;
+                semResultado.hidden = total !== 0;
+
+                resumo.textContent = total === 0
+                    ? "Nenhum registro encontrado"
+                    : `Mostrando ${inicio + 1} a ${fim} de ${total} editoras`;
+
+                renderizarPaginacao(totalPaginas);
+            }
+
+            function renderizarPaginacao(totalPaginas) {
+                paginacao.innerHTML = "";
+
+                if (totalPaginas <= 1) return;
+
+                function criarBotao(texto, pagina, desabilitado = false, ativo = false) {
+                    const li = document.createElement("li");
+                    const botao = document.createElement("button");
+
+                    botao.type = "button";
+                    botao.textContent = texto;
+                    botao.disabled = desabilitado;
+
+                    if (ativo) {
+                        botao.classList.add("active");
+                    }
+
+                    botao.addEventListener("click", function () {
+                        paginaAtual = pagina;
+                        atualizarTabela();
+                    });
+
+                    li.appendChild(botao);
+                    paginacao.appendChild(li);
+                }
+
+                criarBotao("‹", paginaAtual - 1, paginaAtual === 1);
+
+                for (let i = 1; i <= totalPaginas; i++) {
+                    if (
+                        i === 1 ||
+                        i === totalPaginas ||
+                        (i >= paginaAtual - 1 && i <= paginaAtual + 1)
+                    ) {
+                        criarBotao(i, i, false, i === paginaAtual);
+                    }
+                }
+
+                criarBotao("›", paginaAtual + 1, paginaAtual === totalPaginas);
+            }
+
+            campoBusca.addEventListener("input", function () {
+                const termo = this.value.toLocaleLowerCase("pt-BR").trim();
+
+                editorasFiltradas = linhas.filter(linha =>
+                    linha.textContent.toLocaleLowerCase("pt-BR").includes(termo)
+                );
+
+                paginaAtual = 1;
+                atualizarTabela();
+            });
+
+            atualizarTabela();
+        });
+    </script>
+}

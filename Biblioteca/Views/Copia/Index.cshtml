@@ -2,52 +2,455 @@
 
 @{
     ViewData["Title"] = "Cópias";
+
+    var copias = Model?.ToList() ?? new List<Biblioteca.Models.Copia>();
 }
 
-<h1>Cópias</h1>
-
-<a asp-action="Create" class="btn btn-success btn-sm">
-    Registrar Nova Cópia
-</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CopiaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstadoConservacao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Disponivel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Livro)
-            </th>
-            <th>Opções</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.CopiaId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.EstadoConservacao)
-            </td>
-            <td>
-                @(item.Disponivel ? "✅Sim" : "❌Não")
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Livro.Titulo)
-            </td>
-            <td>
-                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.CopiaId">Editar</a> 
-                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.CopiaId">Detalhes</a> 
-                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.CopiaId">Deletar</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<div class="lume-page">
+
+    <!-- CABEÇALHO -->
+    <section class="lume-page-header">
+
+        <div class="lume-page-heading">
+
+            <span class="lume-page-label">
+                <i class="bi bi-book-half"></i>
+                Controle do acervo
+            </span>
+
+            <h1>Cópias</h1>
+
+            <p>
+                Gerencie os exemplares cadastrados e acompanhe sua disponibilidade.
+            </p>
+
+        </div>
+
+        <a asp-action="Create" class="lume-btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Registrar Cópia
+        </a>
+
+    </section>
+
+
+    <!-- LISTAGEM -->
+    <section class="lume-list-card">
+
+        <!-- CABEÇALHO DO CARD -->
+        <div class="lume-list-header">
+
+            <div class="lume-list-title">
+                <i class="bi bi-collection"></i>
+                <h2>Exemplares cadastrados</h2>
+            </div>
+
+            <div class="lume-list-search">
+                <i class="bi bi-search"></i>
+
+                <input type="search"
+                       id="buscarCopia"
+                       placeholder="Buscar por livro ou código..."
+                       autocomplete="off" />
+            </div>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="lume-table-responsive">
+
+            <table class="lume-table" id="tabelaCopias">
+
+                <thead>
+                    <tr>
+
+                        <th>
+                            <i class="bi bi-hash"></i>
+                            Código
+                        </th>
+
+                        <th>
+                            <i class="bi bi-journal-bookmark"></i>
+                            Livro
+                        </th>
+
+                        <th>
+                            <i class="bi bi-stars"></i>
+                            Conservação
+                        </th>
+
+                        <th>
+                            <i class="bi bi-check-circle"></i>
+                            Disponibilidade
+                        </th>
+
+                        <th>
+                            <i class="bi bi-gear"></i>
+                            Opções
+                        </th>
+
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in copias)
+                    {
+                        <tr class="item-copia">
+
+                            <!-- CÓDIGO -->
+                            <td>
+                                <span class="lume-badge lume-badge-neutral">
+                                    #@item.CopiaId
+                                </span>
+                            </td>
+
+
+                            <!-- LIVRO -->
+                            <td>
+                                @(item.Livro?.Titulo ?? "Livro não informado")
+                            </td>
+
+
+                            <!-- CONSERVAÇÃO -->
+                            <td>
+
+                                @{
+                                    var conservacao = item.EstadoConservacao.ToString();
+
+                                    var classeConservacao = conservacao switch
+                                    {
+                                        "Novo" => "lume-badge-success",
+                                        "Bom" => "lume-badge-success",
+                                        "Regular" => "lume-badge-warning",
+                                        "Danificado" => "lume-badge-danger",
+                                        _ => "lume-badge-neutral"
+                                    };
+                                }
+
+                                <span class="lume-badge @classeConservacao">
+                                    @conservacao
+                                </span>
+
+                            </td>
+
+
+                            <!-- DISPONIBILIDADE -->
+                            <td>
+
+                                @if (item.Disponivel)
+                                {
+                                    <span class="lume-badge lume-badge-success">
+                                        <i class="bi bi-check-circle"></i>
+                                        Disponível
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="lume-badge lume-badge-danger">
+                                        <i class="bi bi-x-circle"></i>
+                                        Indisponível
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <!-- OPÇÕES -->
+                            <td>
+
+                                <div class="lume-table-actions">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.CopiaId"
+                                       class="lume-btn-action lume-btn-details">
+
+                                        <i class="bi bi-eye"></i>
+                                        Detalhes
+
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.CopiaId"
+                                       class="lume-btn-action lume-btn-edit">
+
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.CopiaId"
+                                       class="lume-btn-action lume-btn-delete">
+
+                                        <i class="bi bi-trash"></i>
+                                        Deletar
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+
+            <!-- ESTADO VAZIO -->
+            <div id="copiasSemResultado"
+                 class="lume-empty-state"
+                 hidden>
+
+                <i class="bi bi-search"></i>
+
+                <p>Nenhuma cópia encontrada.</p>
+
+            </div>
+
+
+            <!-- NENHUMA CÓPIA CADASTRADA -->
+            @if (!copias.Any())
+            {
+                <div class="lume-empty-state" id="nenhumaCopiaCadastrada">
+
+                    <i class="bi bi-collection"></i>
+
+                    <p>Nenhuma cópia cadastrada.</p>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- RODAPÉ -->
+        <div class="lume-table-footer">
+
+            <span id="resumoCopias">
+                Mostrando registros
+            </span>
+
+            <nav aria-label="Paginação das cópias">
+
+                <ul id="paginacaoCopias" class="lume-pagination">
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- BUSCA E PAGINAÇÃO -->
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const campo = document.getElementById("buscarCopia");
+
+            const tabela = document.getElementById("tabelaCopias");
+
+            const linhas = Array.from(
+                document.querySelectorAll(".item-copia")
+            );
+
+            const paginacao = document.getElementById("paginacaoCopias");
+
+            const resumo = document.getElementById("resumoCopias");
+
+            const mensagem = document.getElementById("copiasSemResultado");
+
+            const itensPorPagina = 10;
+
+            let paginaAtual = 1;
+
+            let copiasFiltradas = [...linhas];
+
+
+            // RENDERIZAR TABELA
+            function renderizarTabela() {
+
+                const total = copiasFiltradas.length;
+
+                const totalPaginas = Math.ceil(total / itensPorPagina);
+
+                paginaAtual = Math.max(
+                    1,
+                    Math.min(paginaAtual, totalPaginas || 1)
+                );
+
+
+                // Ocultar todas as linhas
+                linhas.forEach(linha => {
+                    linha.style.display = "none";
+                });
+
+
+                // Calcular registros da página atual
+                const inicio = (paginaAtual - 1) * itensPorPagina;
+
+                const fim = Math.min(inicio + itensPorPagina, total);
+
+
+                // Exibir registros da página atual
+                copiasFiltradas.slice(inicio, fim).forEach(linha => {
+                    linha.style.display = "";
+                });
+
+
+                // Atualizar resumo
+                resumo.textContent = total === 0
+                    ? "Nenhum registro encontrado"
+                    : `Mostrando ${inicio + 1} a ${fim} de ${total} cópias`;
+
+
+                // Estado vazio
+                mensagem.hidden = total !== 0;
+
+                tabela.style.display = total === 0 ? "none" : "table";
+
+
+                // Paginação
+                renderizarBotoes(totalPaginas);
+
+            }
+
+
+            // ADICIONAR BOTÃO
+            function adicionarBotao(texto, pagina, desabilitado = false, ativo = false) {
+
+                const li = document.createElement("li");
+
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+
+                botao.textContent = texto;
+
+                botao.disabled = desabilitado;
+
+
+                if (ativo) {
+
+                    botao.classList.add("active");
+
+                    botao.setAttribute("aria-current", "page");
+
+                }
+
+
+                botao.addEventListener("click", function () {
+
+                    if (desabilitado) return;
+
+                    paginaAtual = pagina;
+
+                    renderizarTabela();
+
+                });
+
+
+                li.appendChild(botao);
+
+                paginacao.appendChild(li);
+
+            }
+
+
+            // RENDERIZAR PAGINAÇÃO
+            function renderizarBotoes(totalPaginas) {
+
+                paginacao.innerHTML = "";
+
+                if (totalPaginas <= 1) return;
+
+
+                // Página anterior
+                adicionarBotao(
+                    "‹",
+                    paginaAtual - 1,
+                    paginaAtual === 1
+                );
+
+
+                // Limitar números exibidos
+                let inicio = Math.max(1, paginaAtual - 2);
+
+                let fim = Math.min(totalPaginas, inicio + 4);
+
+                inicio = Math.max(1, fim - 4);
+
+
+                // Números das páginas
+                for (let i = inicio; i <= fim; i++) {
+
+                    adicionarBotao(
+                        i,
+                        i,
+                        false,
+                        i === paginaAtual
+                    );
+
+                }
+
+
+                // Próxima página
+                adicionarBotao(
+                    "›",
+                    paginaAtual + 1,
+                    paginaAtual === totalPaginas
+                );
+
+            }
+
+
+            // BUSCA
+            campo.addEventListener("input", function () {
+
+                const termo = campo.value
+                    .trim()
+                    .toLocaleLowerCase("pt-BR");
+
+
+                copiasFiltradas = linhas.filter(linha =>
+
+                    linha.textContent
+                        .toLocaleLowerCase("pt-BR")
+                        .includes(termo)
+
+                );
+
+
+                // Voltar à primeira página
+                paginaAtual = 1;
+
+                renderizarTabela();
+
+            });
+
+
+            // INICIALIZAÇÃO
+            renderizarTabela();
+
+        });
+
+    </script>
+
+}

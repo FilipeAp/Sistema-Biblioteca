@@ -3,215 +3,311 @@
 @{
     ViewData["Title"] = "Livros";
 }
-<div class="d-flex justify-content-between align-items-end">
-    <div>
-        <h1>Livros</h1>
 
-        <a asp-action="Create" class="btn btn-success btn-sm">
-            Registrar Novo Livro
-        </a>
-    </div>
-    <form class="d-flex flex-row align-items-center">
-    <input type="search"
-           id="buscarLivro"
-           class="form-control"
-           placeholder="Buscar livro..." />
-    </form>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ISBN)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ano_Publicado)
-            </th>
-            <th>
-                Copias
-            </th>
-            <th>
-                Disponibilidade
-            </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.CategoriaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubcategoriaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subcategoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Editoras)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Autores)
-            </th> *@
-            <th>Opções</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr class="item-livro">
-            <td>
-                @Html.DisplayFor(model => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Ano_Publicado)
-            </td>
-            <td>
-                @item.Copias.Count(c => c.Disponivel) / @item.Copias.Count
-            </td>
-            <td>
-                @if(item.Copias.Count(c => c.Disponivel) > 0){
-                        <div class="badge bg-success" role="alert">
-                        Disponível
-                    </div>
-                }else{
-                        <div class="badge bg-danger" role="alert">
-                        Indisponível
-                    </div>
-                }
-            </td>
-            @* <td>
-                @Html.DisplayFor(model => item.CategoriaId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.SubcategoriaId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Categoria)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Subcategoria)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Editoras)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Autores)
-            </td> *@
-            <td>
-                <a asp-action="Edit" class="btn btn-warning btn-sm" asp-route-id="@item.LivroId">Editar</a> 
-                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.LivroId">Detalhes</a> 
-                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.LivroId">Deletar</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
-<nav aria-label="Paginação dos livros">
-    <ul id="paginacaoLivros"
-        class="pagination justify-content-center mt-4">
-    </ul>
-</nav>
+
+<div class="lume-page">
+
+    <!-- CABEÇALHO -->
+    <section class="lume-page-header">
+
+        <div class="lume-page-heading">
+
+            <span class="lume-page-label">
+                <i class="bi bi-book-half"></i>
+                Biblioteca Lume
+            </span>
+
+            <h1>Livros</h1>
+
+            <p>
+                Gerencie o acervo de livros da biblioteca.
+            </p>
+
+        </div>
+
+        <a asp-action="Create" class="lume-btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Novo Livro
+        </a>
+
+    </section>
+
+
+    <!-- LISTAGEM -->
+    <section class="lume-list-card">
+
+        <div class="lume-list-header">
+
+            <div class="lume-list-title">
+                <i class="bi bi-book"></i>
+                <h2>Lista de Livros</h2>
+            </div>
+
+            <div class="lume-list-search">
+                <i class="bi bi-search"></i>
+
+                <input type="search"
+                       id="buscarLivro"
+                       placeholder="Buscar livro..." />
+            </div>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="lume-table-responsive">
+
+            <table class="lume-table">
+
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="bi bi-book"></i>
+                            Título
+                        </th>
+
+                        <th>
+                            <i class="bi bi-upc-scan"></i>
+                            ISBN
+                        </th>
+
+                        <th>
+                            <i class="bi bi-calendar3"></i>
+                            Ano
+                        </th>
+
+                        <th>
+                            <i class="bi bi-journal-bookmark"></i>
+                            Cópias
+                        </th>
+
+                        <th>
+                            <i class="bi bi-check-circle"></i>
+                            Disponibilidade
+                        </th>
+
+                        <th>
+                            <i class="bi bi-gear"></i>
+                            Opções
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        var copiasDisponiveis =
+                            item.Copias.Count(c => c.Disponivel);
+
+                        var totalCopias = item.Copias.Count;
+
+                        <tr class="item-livro">
+
+                            <td>
+                                @Html.DisplayFor(model => item.Titulo)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(model => item.ISBN)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(model => item.Ano_Publicado)
+                            </td>
+
+                            <td>
+                                @copiasDisponiveis / @totalCopias
+                            </td>
+
+                            <td>
+
+                                @if (copiasDisponiveis > 0)
+                                {
+                                    <span class="lume-badge lume-badge-success">
+                                        <i class="bi bi-check-circle"></i>
+                                        Disponível
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="lume-badge lume-badge-danger">
+                                        <i class="bi bi-x-circle"></i>
+                                        Indisponível
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <div class="lume-table-actions">
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.LivroId"
+                                       class="lume-btn-action lume-btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+                                    </a>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.LivroId"
+                                       class="lume-btn-action lume-btn-details">
+                                        <i class="bi bi-eye"></i>
+                                        Detalhes
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.LivroId"
+                                       class="lume-btn-action lume-btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                        Deletar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+            <div id="mensagemSemResultados" class="lume-empty-state" hidden>
+                <i class="bi bi-search"></i>
+                <p>Nenhum livro encontrado.</p>
+            </div>
+
+        </div>
+
+
+        <!-- RODAPÉ -->
+        <div class="lume-table-footer">
+
+            <span id="resumoRegistros">
+                Mostrando registros
+            </span>
+
+            <nav aria-label="Paginação dos livros">
+                <ul id="paginacaoLivros" class="lume-pagination">
+                </ul>
+            </nav>
+
+        </div>
+
+    </section>
+
+</div>
 
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
+
             const campo = document.getElementById("buscarLivro");
+
             const linhas = Array.from(
                 document.querySelectorAll(".item-livro")
             );
+
             const paginacao = document.getElementById("paginacaoLivros");
+            const resumo = document.getElementById("resumoRegistros");
+            const mensagem = document.getElementById("mensagemSemResultados");
 
             const itensPorPagina = 10;
+
             let paginaAtual = 1;
             let livrosFiltrados = [...linhas];
 
             function renderizarTabela() {
-                const totalPaginas = Math.ceil(
-                    livrosFiltrados.length / itensPorPagina
-                );
 
-                // Garante que a página atual continue válida após uma busca.
+                const total = livrosFiltrados.length;
+
+                const totalPaginas = Math.ceil(total / itensPorPagina);
+
                 paginaAtual = Math.max(
                     1,
                     Math.min(paginaAtual, totalPaginas || 1)
                 );
 
-                // Esconde todas as linhas inicialmente.
                 linhas.forEach(linha => {
                     linha.style.display = "none";
                 });
 
-                // Calcula quais livros devem aparecer nesta página.
                 const inicio = (paginaAtual - 1) * itensPorPagina;
-                const fim = inicio + itensPorPagina;
+                const fim = Math.min(inicio + itensPorPagina, total);
 
                 livrosFiltrados.slice(inicio, fim).forEach(linha => {
                     linha.style.display = "";
                 });
 
+                resumo.textContent = total === 0
+                    ? "Nenhum registro encontrado"
+                    : `Mostrando ${inicio + 1} a ${fim} de ${total} registros`;
+
+                mensagem.hidden = total !== 0;
+
                 renderizarBotoes(totalPaginas);
             }
 
+            function adicionarBotao(texto, pagina, desabilitado = false, ativo = false) {
+
+                const li = document.createElement("li");
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+                botao.textContent = texto;
+                botao.disabled = desabilitado;
+
+                if (ativo) {
+                    botao.classList.add("active");
+                    botao.setAttribute("aria-current", "page");
+                }
+
+                botao.addEventListener("click", function () {
+
+                    if (desabilitado) return;
+
+                    paginaAtual = pagina;
+                    renderizarTabela();
+
+                });
+
+                li.appendChild(botao);
+                paginacao.appendChild(li);
+            }
+
             function renderizarBotoes(totalPaginas) {
+
                 paginacao.innerHTML = "";
 
-                if (totalPaginas <= 1) {
-                    return;
-                }
+                if (totalPaginas <= 1) return;
 
-                function adicionarBotao(texto, pagina, desabilitado = false,
-                    ativo = false) {
-                    const li = document.createElement("li");
-                    li.className = "page-item";
+                adicionarBotao("‹", paginaAtual - 1, paginaAtual === 1);
 
-                    if (desabilitado) li.classList.add("disabled");
-                    if (ativo) li.classList.add("active");
-
-                    const botao = document.createElement("button");
-                    botao.type = "button";
-                    botao.className = "page-link";
-                    botao.textContent = texto;
-                    botao.disabled = desabilitado;
-
-                    botao.addEventListener("click", function() {
-                        paginaAtual = pagina;
-                        renderizarTabela();
-                    });
-
-                    li.appendChild(botao);
-                    paginacao.appendChild(li);
-                }
-
-                // Botão anterior.
-                adicionarBotao(
-                    "‹",
-                    paginaAtual - 1,
-                    paginaAtual === 1
-                );
-
-                // Mostra até 5 números de página.
                 let inicio = Math.max(1, paginaAtual - 2);
                 let fim = Math.min(totalPaginas, inicio + 4);
 
-                // Mantém até 5 números também nas últimas páginas.
                 inicio = Math.max(1, fim - 4);
 
                 for (let i = inicio; i <= fim; i++) {
+
                     adicionarBotao(
                         i,
                         i,
                         false,
                         i === paginaAtual
                     );
+
                 }
 
-                // Botão próximo.
                 adicionarBotao(
                     "›",
                     paginaAtual + 1,
@@ -219,25 +315,25 @@
                 );
             }
 
-            campo.addEventListener("input", function() {
+            campo.addEventListener("input", function () {
+
                 const termo = campo.value
                     .trim()
-                    .toLocaleLowerCase();
+                    .toLocaleLowerCase("pt-BR");
 
                 livrosFiltrados = linhas.filter(linha =>
                     linha.textContent
-                        .toLocaleLowerCase()
+                        .toLocaleLowerCase("pt-BR")
                         .includes(termo)
                 );
 
-                // Ao buscar, volta para a primeira página.
                 paginaAtual = 1;
                 renderizarTabela();
+
             });
 
             renderizarTabela();
-        });
 
-        
+        });
     </script>
 }
