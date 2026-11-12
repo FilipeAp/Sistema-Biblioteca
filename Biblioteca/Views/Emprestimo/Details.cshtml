@@ -1,7 +1,7 @@
 @model Biblioteca.Models.Emprestimo
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes de Emprestimo";
 }
 
 <h1>Detalhes do Emprestimo</h1>
@@ -70,6 +70,5 @@
     </dl>
 </div>
 <div class = "d-flex gap-2">
-    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.EmprestimoId">Editar</a> 
     <a href="javascript:history.back()" class="btn btn-primary">Voltar</a>
 </div>

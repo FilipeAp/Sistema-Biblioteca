@@ -140,15 +140,7 @@ public class EmprestimoController : Controller
     public async Task<IActionResult> Create(EmprestimoViewModel vm)
     {
         var FuncionarioAutenticado = await _funcionarioRepository.GetByIdentityUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        if (vm.CopiaIds == null || !vm.CopiaIds.Any())
-        {
-            ModelState.AddModelError(
-                nameof(vm.CopiaIds),
-                "Selecione pelo menos uma cópia."
-            );
-        }
-
+        
         if (vm.CopiaIds.Count == 0)
         {
             ModelState.AddModelError(

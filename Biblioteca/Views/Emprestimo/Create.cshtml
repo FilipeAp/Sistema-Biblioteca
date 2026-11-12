@@ -2,7 +2,7 @@
 @using System.Linq
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar Emprestimo";
 }
 
 <h1>Registrar Novo Emprestimo</h1>
@@ -13,7 +13,7 @@
 {
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Create">
+            <form asp-action="Create" id="formEmprestimo">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
@@ -230,7 +230,45 @@ else
         configurarBusca("buscarCopia", "item-copia");
         configurarBusca("buscaLeitor", "item-leitor");
 
+        document.addEventListener("DOMContentLoaded", function () {
+        const formulario = document.getElementById("formEmprestimo");
 
+        const erroCopia = document.querySelector(
+            '[data-valmsg-for="CopiaIds"]'
+        );
+
+        const checkboxes = document.querySelectorAll(
+            'input[name="CopiaIds"]'
+        );
+
+        formulario.addEventListener("submit", function (event) {
+
+            const selecionadas = document.querySelectorAll(
+                'input[name="CopiaIds"]:checked'
+            );
+
+            if (selecionadas.length === 0) {
+                event.preventDefault();
+
+                erroCopia.textContent = "Selecione pelo menos uma cópia.";
+                erroCopia.classList.add("field-validation-error");
+            }
+        });
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+
+                const selecionadas = document.querySelectorAll(
+                    'input[name="CopiaIds"]:checked'
+                );
+
+                if (selecionadas.length > 0) {
+                    erroCopia.textContent = "";
+                    erroCopia.classList.remove("field-validation-error");
+                }
+            });
+        });
+});
 
 
     </script>

@@ -1,289 +1,510 @@
 @model IEnumerable<Biblioteca.Models.Emprestimo>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Empréstimos";
+
+    var emprestimos = Model?.ToList() ?? new List<Biblioteca.Models.Emprestimo>();
+
+    var hoje = DateOnly.FromDateTime(DateTime.Today);
+
+    var totalEmprestimos = emprestimos.Count;
+    var ativos = emprestimos.Count(e => e.DataEntregue == null);
+    var devolvidos = emprestimos.Count(e => e.DataEntregue != null);
+
+    var atrasados = emprestimos.Count(e =>
+        e.DataEntregue == null &&
+        e.PrevisaoDevolucao < hoje);
 }
 
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/emprestimos.css"
+          asp-append-version="true" />
+}
 
-<div class="d-flex justify-content-between align-items-end">
-    <div>
-        <h1>Emprestimos</h1>
+<div class="emprestimos-page">
 
-        <a asp-action="Create" class="btn btn-success btn-sm">
-            Registrar Novo Emprestimo
-        </a>
-    </div>
-    
-    
-    <div class="d-flex flex-row align-items-center gap-2 flex-nowrap">
+    <!-- CABEÇALHO -->
+    <section class="emprestimos-header">
 
-        <div class="btn-group flex-shrink-0" role="group" 
-             aria-label="Filtrar empréstimos por status"
-             class="grupo-filtros">
+        <div class="emprestimos-heading">
+            <span class="section-label">
+                <i class="bi bi-book-half"></i>
+                Biblioteca Lume
+            </span>
 
-            <button type="button"
-                    class="btn btn-primary btn-sm filtro-status active"
-                    data-filtro="todos">
-                Todos
-            </button>
+            <h1>Empréstimos</h1>
 
-            <button type="button"
-                    class="btn btn-outline-primary btn-sm filtro-status"
-                    data-filtro="andamento">
-                Em andamento
-            </button>
-
-            <button type="button"
-                    class="btn btn-outline-primary btn-sm filtro-status"
-                    data-filtro="devolvido">
-                Devolvidos
-            </button>
+            <p>
+                Gerencie os empréstimos e acompanhe as devoluções
+                dos livros da biblioteca.
+            </p>
         </div>
 
-        <input type="search"
-               id="buscarEmprestimo"
-               class="form-control form-control"
-               placeholder="Buscar empréstimo..."
-               style="width: 220px;" />
+    </section>
 
-    </div>
 
+    <!-- INDICADORES -->
+    <section class="emprestimos-stats">
+
+        <div class="stat-card">
+            <div class="stat-icon stat-green">
+                <i class="bi bi-journal-bookmark"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Total de empréstimos</span>
+                <strong>@totalEmprestimos</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon stat-blue">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Ativos</span>
+                <strong>@ativos</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon stat-green">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Devolvidos</span>
+                <strong>@devolvidos</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon stat-orange">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Atrasados</span>
+                <strong>@atrasados</strong>
+            </div>
+        </div>
+
+
+        <a asp-action="Create" class="btn-novo-emprestimo">
+            <i class="bi bi-journal-plus"></i>
+            Novo Empréstimo
+        </a>
+
+    </section>
+
+
+    <!-- LISTAGEM -->
+    <section class="emprestimos-list-card">
+
+        <div class="list-header">
+
+            <div class="list-title">
+                <i class="bi bi-book"></i>
+                <h2>Lista de Empréstimos</h2>
+            </div>
+
+
+            <div class="list-controls">
+
+                <div class="search-emprestimo">
+                    <i class="bi bi-search"></i>
+
+                    <input type="search"
+                           id="buscarEmprestimo"
+                           placeholder="Buscar empréstimo..." />
+                </div>
+
+
+                <div class="filter-emprestimo">
+                    <i class="bi bi-funnel"></i>
+
+                    <select id="filtroStatus" aria-label="Filtrar empréstimos">
+                        <option value="todos">Todos</option>
+                        <option value="emprestado">Emprestados</option>
+                        <option value="atrasado">Atrasados</option>
+                        <option value="devolvido">Devolvidos</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="table-responsive">
+
+            <table class="table tabela-emprestimos">
+
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="bi bi-person"></i>
+                            Leitor
+                        </th>
+
+                        <th>
+                            <i class="bi bi-calendar3"></i>
+                            Data de retirada
+                        </th>
+
+                        <th>
+                            <i class="bi bi-calendar-check"></i>
+                            Previsão de devolução
+                        </th>
+
+                        <th>
+                            <i class="bi bi-cash-coin"></i>
+                            Multa
+                        </th>
+
+                        <th>
+                            <i class="bi bi-info-circle"></i>
+                            Status
+                        </th>
+
+                        <th class="text-center">
+                            <i class="bi bi-gear"></i>
+                            Opções
+                        </th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in emprestimos)
+                    {
+                        var estaAtrasado =
+                            item.DataEntregue == null &&
+                            item.PrevisaoDevolucao < hoje;
+
+                        var status = item.DataEntregue != null
+                            ? "devolvido"
+                            : estaAtrasado
+                                ? "atrasado"
+                                : "emprestado";
+
+                        <tr class="item-emprestimo"
+                            data-status="@status">
+
+                            <!-- LEITOR -->
+                            <td>
+                                <div class="leitor-info">
+
+                                    <div class="leitor-avatar">
+                                        @{
+                                            var nome = item.Usuario?.Nome ?? "Leitor";
+                                            var iniciais = string.Join("",
+                                                nome.Split(' ',
+                                                    StringSplitOptions.RemoveEmptyEntries)
+                                                .Take(2)
+                                                .Select(p => p[0]));
+                                        }
+
+                                        @iniciais
+                                    </div>
+
+                                    <span>@item.Usuario?.Nome</span>
+
+                                </div>
+                            </td>
+
+
+                            <!-- RETIRADA -->
+                            <td>
+                                <span class="data-emprestimo">
+                                    @item.DataRetida.ToString("dd/MM/yyyy HH:mm")
+                                </span>
+                            </td>
+
+
+                            <!-- PREVISÃO -->
+                            <td>
+                                <span class="data-emprestimo">
+                                    @item.PrevisaoDevolucao.ToString("dd/MM/yyyy")
+                                </span>
+                            </td>
+
+
+                            <!-- MULTA -->
+                            <td>
+                                <span class="valor-multa">
+                                    @item.Multa.ToString("C")
+                                </span>
+                            </td>
+
+
+                            <!-- STATUS -->
+                            <td>
+                                @if (status == "devolvido")
+                                {
+                                    <span class="status-badge status-devolvido">
+                                        <span class="status-dot"></span>
+                                        Devolvido
+                                    </span>
+                                }
+                                else if (status == "atrasado")
+                                {
+                                    <span class="status-badge status-atrasado">
+                                        <span class="status-dot"></span>
+                                        Atrasado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-ativo">
+                                        <span class="status-dot"></span>
+                                        Emprestado
+                                    </span>
+                                }
+                            </td>
+
+                            <!-- OPÇÕES -->
+
+                            <td>
+                                <div class="acoes-emprestimo">
+
+                                    <div class="acao-devolucao">
+                                        @if (item.DataEntregue == null)
+                                        {
+                                            <form asp-action="RegistrarEntrega"
+                                                  asp-route-id="@item.EmprestimoId"
+                                                  method="post"
+                                                  class="form-devolucao"
+                                                  onsubmit="return confirm('Deseja realmente registrar a devolução deste empréstimo?');">
+
+                                                <button type="submit" class="btn-registrar-devolucao">
+                                                    <i class="bi bi-arrow-return-left"></i>
+                                                    Registrar devolução
+                                                </button>
+
+                                            </form>
+                                        }
+                                    </div>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.EmprestimoId"
+                                       class="btn-detalhes">
+                                        <i class="bi bi-eye"></i>
+                                        Detalhes
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.EmprestimoId"
+                                       class="btn-deletar">
+                                        <i class="bi bi-trash"></i>
+                                        Deletar
+                                    </a>
+
+                                </div>
+                            </td>
+
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+            <div id="mensagemSemResultados" class="sem-resultados" hidden>
+                <i class="bi bi-search"></i>
+                <p>Nenhum empréstimo encontrado.</p>
+            </div>
+
+        </div>
+
+
+        <!-- RODAPÉ DA TABELA -->
+        <div class="table-footer">
+
+            <span id="resumoRegistros">
+                Mostrando 0 registros
+            </span>
+
+            <nav aria-label="Paginação dos empréstimos">
+                <ul id="paginacaoEmprestimo"
+                    class="paginacao-emprestimos">
+                </ul>
+            </nav>
+
+        </div>
+
+    </section>
 
 </div>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataRetida)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrevisaoDevolucao)
-            </th>
-            @* <th>
-                @Html.DisplayNameFor(model => model.DataEntregue)
-            </th> *@
-            <th>
-                @Html.DisplayNameFor(model => model.Multa)
-            </th>
-            @* <th>
-                Entregue?
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CopiaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UsuarioId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FuncionarioId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Copias)
-            </th>
-            
-            <th>
-                @Html.DisplayNameFor(model => model.Funcionario)
-            </th> *@
-
-            <th>Status</th>
-            <th>Opções</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr class="item-emprestimo"
-            data-status="@(item.DataEntregue == null
-                ? "andamento"
-                : "devolvido")">
-            <td>
-                @Html.DisplayFor(model => item.Usuario.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DataRetida)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.PrevisaoDevolucao)
-            </td>
-            @* <td>
-                @Html.DisplayFor(model => item.DataEntregue)
-            </td> *@
-            <td>
-                @Html.DisplayFor(model => item.Multa)
-            </td>
-            @* <td>
-                    @(item.DataEntregue == null ? "Não" : "Sim")
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.CopiaId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.UsuarioId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.FuncionarioId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Copias)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Funcionario)
-            </td> *@
-            @* @if(item.DataEntregue > DateTime.MinValue){ *@
-                
-            <td>
-                @if (item.DataEntregue == null)
-                {
-                    <form asp-action="RegistrarEntrega"
-                          asp-route-id="@item.EmprestimoId"
-                          method="post"
-                          onsubmit="return confirm('Deseja registrar a devolução deste empréstimo?');">
-
-                        <button type="submit" class="btn btn-success">
-                            Entregar
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-secondary" disabled>
-                        Devolvido
-                    </button>
-                }
-            </td>
-
-            @* }
-            else{
-                <td>
-                    <div class="form-group">
-                    <input value="Entregue" class="btn btn-secondary" disabled />
-                    </div>
-                </td>
-            } *@
-
-            <td>
-                <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.EmprestimoId">Detalhes</a> 
-                <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.EmprestimoId">Deletar</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-<nav aria-label="Paginação dos Emprestimos">
-    <ul id="paginacaoEmprestimo"
-        class="pagination justify-content-center mt-4">
-    </ul>
-</nav>
-
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
 
     <script>
+
         
         document.addEventListener("DOMContentLoaded", function () {
+
             const campo = document.getElementById("buscarEmprestimo");
             const linhas = Array.from(
                 document.querySelectorAll(".item-emprestimo")
             );
-            const paginacao = document.getElementById("paginacaoEmprestimo");
-            const botoesFiltro = document.querySelectorAll(".filtro-status");
 
-            const itensPorPagina = 10;
+            const paginacao = document.getElementById("paginacaoEmprestimo");
+            const filtroStatus = document.getElementById("filtroStatus");
+            const resumo = document.getElementById("resumoRegistros");
+            const mensagemSemResultados =
+                document.getElementById("mensagemSemResultados");
+
+            const itensPorPagina = 7;
 
             let paginaAtual = 1;
-            let filtroAtual = "todos";
             let emprestimosFiltrados = [...linhas];
 
+
+            // APLICA BUSCA E FILTRO
             function aplicarFiltros() {
-                const termo = campo.value.trim().toLocaleLowerCase();
+
+                const termo = campo.value.trim().toLocaleLowerCase("pt-BR");
+                const filtro = filtroStatus.value;
 
                 emprestimosFiltrados = linhas.filter(linha => {
-                    const correspondeBusca = linha.textContent
-                        .toLocaleLowerCase()
-                        .includes(termo);
+
+                    const textoLinha = linha.textContent
+                        .toLocaleLowerCase("pt-BR");
+
+                    const correspondeBusca = textoLinha.includes(termo);
 
                     const status = linha.dataset.status;
 
                     const correspondeStatus =
-                        filtroAtual === "todos" ||
-                        status === filtroAtual;
+                        filtro === "todos" || status === filtro;
 
                     return correspondeBusca && correspondeStatus;
+
                 });
 
                 paginaAtual = 1;
+
                 renderizarTabela();
             }
 
+
+            // RENDERIZA OS REGISTROS
             function renderizarTabela() {
-                const totalPaginas = Math.ceil(
-                    emprestimosFiltrados.length / itensPorPagina
-                );
 
-                paginaAtual = Math.max(
-                    1,
-                    Math.min(paginaAtual, totalPaginas || 1)
-                );
+                const total = emprestimosFiltrados.length;
 
+                const totalPaginas = Math.ceil(total / itensPorPagina);
+
+                if (total === 0) {
+                    paginaAtual = 1;
+                } else {
+                    paginaAtual = Math.min(paginaAtual, totalPaginas);
+                }
+
+                // Esconde todas as linhas
                 linhas.forEach(linha => {
                     linha.style.display = "none";
                 });
 
+                // Calcula os registros da página atual
                 const inicio = (paginaAtual - 1) * itensPorPagina;
-                const fim = inicio + itensPorPagina;
+                const fim = Math.min(inicio + itensPorPagina, total);
 
-                emprestimosFiltrados.slice(inicio, fim).forEach(linha => {
-                    linha.style.display = "";
-                });
+                // Exibe somente os registros da página atual
+                emprestimosFiltrados
+                    .slice(inicio, fim)
+                    .forEach(linha => {
+                        linha.style.display = "";
+                    });
 
+                // Atualiza o resumo
+                if (total === 0) {
+                    resumo.textContent = "Nenhum registro encontrado";
+                } else {
+                    resumo.textContent =
+                        `Mostrando ${inicio + 1} a ${fim} de ${total} registros`;
+                }
+
+                // Mensagem de resultado vazio
+                mensagemSemResultados.hidden = total !== 0;
+
+                // Atualiza paginação
                 renderizarBotoes(totalPaginas);
             }
 
+
+            // CRIA UM BOTÃO DA PAGINAÇÃO
+            function adicionarBotao(texto, pagina, desabilitado = false, ativo = false) {
+
+                const li = document.createElement("li");
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+                botao.className = "pagina-botao";
+                botao.textContent = texto;
+                botao.disabled = desabilitado;
+
+                if (ativo) {
+                    botao.classList.add("active");
+                    botao.setAttribute("aria-current", "page");
+                }
+
+                botao.addEventListener("click", function () {
+                    if (desabilitado) return;
+
+                    paginaAtual = pagina;
+                    renderizarTabela();
+                });
+
+                li.appendChild(botao);
+                paginacao.appendChild(li);
+            }
+
+
+            // RENDERIZA OS BOTÕES DA PAGINAÇÃO
             function renderizarBotoes(totalPaginas) {
+
                 paginacao.innerHTML = "";
 
                 if (totalPaginas <= 1) {
                     return;
                 }
 
-                function adicionarBotao(texto, pagina, desabilitado = false,
-                    ativo = false) {
-                    const li = document.createElement("li");
-                    li.className = "page-item";
+                // Voltar
+                adicionarBotao(
+                    "‹",
+                    paginaAtual - 1,
+                    paginaAtual === 1
+                );
 
-                    if (desabilitado) li.classList.add("disabled");
-                    if (ativo) li.classList.add("active");
-
-                    const botao = document.createElement("button");
-                    botao.type = "button";
-                    botao.className = "page-link";
-                    botao.textContent = texto;
-                    botao.disabled = desabilitado;
-
-                    botao.addEventListener("click", function () {
-                        paginaAtual = pagina;
-                        renderizarTabela();
-                    });
-
-                    li.appendChild(botao);
-                    paginacao.appendChild(li);
-                }
-
-                adicionarBotao("‹", paginaAtual - 1, paginaAtual === 1);
-
+                // Números das páginas
                 let inicio = Math.max(1, paginaAtual - 2);
                 let fim = Math.min(totalPaginas, inicio + 4);
 
                 inicio = Math.max(1, fim - 4);
 
                 for (let i = inicio; i <= fim; i++) {
-                    adicionarBotao(i, i, false, i === paginaAtual);
+                    adicionarBotao(
+                        i,
+                        i,
+                        false,
+                        i === paginaAtual
+                    );
                 }
 
+                // Avançar
                 adicionarBotao(
                     "›",
                     paginaAtual + 1,
@@ -291,25 +512,16 @@
                 );
             }
 
+
+            // EVENTOS
             campo.addEventListener("input", aplicarFiltros);
 
-            botoesFiltro.forEach(botao => {
-                botao.addEventListener("click", function () {
-                    filtroAtual = this.dataset.filtro;
+            filtroStatus.addEventListener("change", aplicarFiltros);
 
-                    botoesFiltro.forEach(b => {
-                        b.classList.remove("active", "btn-primary");
-                        b.classList.add("btn-outline-primary");
-                    });
 
-                    this.classList.add("active", "btn-primary");
-                    this.classList.remove("btn-outline-primary");
-
-                    aplicarFiltros();
-                });
-            });
-
+            // INICIALIZAÇÃO
             aplicarFiltros();
+
         });
 
     </script>

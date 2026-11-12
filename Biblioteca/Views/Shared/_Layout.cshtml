@@ -1,76 +1,280 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Biblioteca</title>
+    <title>@ViewData["Title"] - Biblioteca Lume</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Biblioteca.styles.css" asp-append-version="true" />
     <link rel="icon" href="~/BibliotecaLume.png">
-    
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts - Identidade Visual Lume -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Alike&family=Literata:wght@400;500;600;700&family=Quattrocento:wght@400;700&display=swap"
+          rel="stylesheet">
+
     @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body>
-    <header>
-        <nav class="navGeral navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
-            <div class="div1Nav container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Emprestimo" asp-action="Index">Biblioteca</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navUl navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Emprestimo" asp-action="Index">Emprestimos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Autor" asp-action="Index">Autores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Editora" asp-action="Index">Editoras</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Livro" asp-action="Index">Livros</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Copia" asp-action="Index">Cópias</a>
-                        </li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                @await Component.InvokeAsync("PessoaMenu")
-                            </li>
-                        }
-                        else
-                        {
-                            <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="Index">Leitores</a>
-                        }
-                        <li class="nav-item">
-                            @await Component.InvokeAsync("CategoriaMenu")
-                        </li>
-                        @await Html.PartialAsync("_LoginPartial");
-                    </ul>
-                    
-                </div>
+    <div class="app-layout">
+
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar" id="sidebar">
+
+            <!-- Logo -->
+            <div class="sidebar-brand">
+                <a asp-controller="Emprestimo" asp-action="Index">
+                    <img src="~/BibliotecaLume.png" alt="Lume" />
+                    <span class="brand-name">Lume</span>
+                    <span class="brand-subtitle">SISTEMA DA BIBLIOTECA</span>
+                </a>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            @{
+                var controllerAtual = ViewContext.RouteData.Values["controller"]?.ToString();
+                var actionAtual = ViewContext.RouteData.Values["action"]?.ToString();
+
+                var pessoasAtivo = controllerAtual == "Usuario"
+                                || controllerAtual == "Funcionario"
+                                || (controllerAtual == "Account" && actionAtual == "Register");
+
+                var categoriasAtivo = controllerAtual == "Categoria"
+                                   || controllerAtual == "Subcategoria";
+            }
+            <!-- Navegação -->
+            <nav class="sidebar-nav">
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Emprestimo" ? "active" : "")"
+                   asp-controller="Emprestimo" asp-action="Index">
+                    <i class="bi bi-house-door"></i>
+                    <span>Empréstimos</span>
+                </a>
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Livro" ? "active" : "")"
+                   asp-controller="Livro" asp-action="Index">
+                    <i class="bi bi-book"></i>
+                    <span>Livros</span>
+                </a>
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Autor" ? "active" : "")"
+                   asp-controller="Autor" asp-action="Index">
+                    <i class="bi bi-people"></i>
+                    <span>Autores</span>
+                </a>
+
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Editora" ? "active" : "")"
+                   asp-controller="Editora" asp-action="Index">
+                    <i class="bi bi-journal-bookmark"></i>
+                    <span>Editoras</span>
+                </a>
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Copia" ? "active" : "")"
+                   asp-controller="Copia" asp-action="Index">
+                    <i class="bi bi-journals"></i>
+                    <span>Cópias</span>
+                </a>
+
+  
+                <!-- MENU PESSOAS -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <!-- Administrador: dropdown completo -->
+
+                    <div class="sidebar-dropdown">
+
+                        <button class="sidebar-link sidebar-dropdown-toggle
+                            @(pessoasAtivo ? "active" : "")"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#menuPessoas"
+                                aria-expanded="@(pessoasAtivo.ToString().ToLower())"
+                                aria-controls="menuPessoas">
+
+                            <i class="bi bi-people"></i>
+                            <span>Pessoas</span>
+
+                            <i class="bi bi-chevron-down sidebar-chevron"></i>
+                        </button>
+
+                        <div class="collapse @(pessoasAtivo ? "show" : "")"
+                             id="menuPessoas">
+
+                            <div class="sidebar-submenu">
+
+                                <a class="sidebar-sublink
+                                    @(controllerAtual == "Usuario" ? "active" : "")"
+                                   asp-controller="Usuario"
+                                   asp-action="Index">
+
+                                    <i class="bi bi-person"></i>
+                                    <span>Leitores</span>
+                                </a>
+
+                                <a class="sidebar-sublink
+                                    @(controllerAtual == "Funcionario" ? "active" : "")"
+                                   asp-controller="Funcionario"
+                                   asp-action="Index">
+
+                                    <i class="bi bi-person-badge"></i>
+                                    <span>Colaboradores</span>
+                                </a>
+
+                                <a class="sidebar-sublink
+                                    @(controllerAtual == "Account" && actionAtual == "Register" ? "active" : "")"
+                                   asp-controller="Account"
+                                   asp-action="Register">
+
+                                    <i class="bi bi-person-plus"></i>
+                                    <span>Cadastrar acesso</span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Colaborador: acesso direto aos leitores -->
+
+                    <a class="sidebar-link
+                        @(controllerAtual == "Usuario" ? "active" : "")"
+                       asp-controller="Usuario"
+                       asp-action="Index">
+
+                        <i class="bi bi-people"></i>
+                        <span>Leitores</span>
+                    </a>
+                }
+
+                <!-- MENU CATEGORIAS -->
+                <div class="sidebar-dropdown">
+
+                    <button class="sidebar-link sidebar-dropdown-toggle
+                        @(categoriasAtivo ? "active" : "")"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#menuCategorias"
+                            aria-expanded="@(categoriasAtivo.ToString().ToLower())"
+                            aria-controls="menuCategorias">
+
+                        <i class="bi bi-bookmark-heart"></i>
+                        <span>Categorias</span>
+
+                        <i class="bi bi-chevron-down sidebar-chevron"></i>
+                    </button>
+
+                    <div class="collapse @(categoriasAtivo ? "show" : "")"
+                         id="menuCategorias">
+
+                        <div class="sidebar-submenu">
+
+                            <a class="sidebar-sublink
+                                @(controllerAtual == "Categoria" ? "active" : "")"
+                               asp-controller="Categoria"
+                               asp-action="Index">
+
+                                <i class="bi bi-bookmark"></i>
+                                <span>Categorias</span>
+                            </a>
+
+                            <a class="sidebar-sublink
+                                @(controllerAtual == "Subcategoria" ? "active" : "")"
+                               asp-controller="Subcategoria"
+                               asp-action="Index">
+
+                                <i class="bi bi-bookmarks"></i>
+                                <span>Subcategorias</span>
+                            </a>
+
+                        </div>
+                    </div>
+
+            </nav>
+
+            <!-- Rodapé da sidebar -->
+            <div class="sidebar-footer">
+                <div class="sidebar-quote">
+                    <p>
+                        “Um bom livro<br />
+                        é sempre um<br />
+                        novo começo.”
+                    </p>
+                </div>
+
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div class="main-area">
+
+            
+                <!-- TOPBAR -->
+                <header class="topbar">
+
+                    <button class="sidebar-toggle" id="sidebarToggle"
+                            type="button" aria-label="Abrir menu">
+                        <i class="bi bi-list"></i>
+                    </button>
+
+                    <div class="topbar-context">
+                        <div class="topbar-breadcrumb">
+                            <span>Biblioteca</span>
+                            <i class="bi bi-chevron-right"></i>
+                            <strong>@ViewData["Title"]</strong>
+                        </div>
+
+                        <span class="topbar-subtitle">
+                            Sistema de gerenciamento da biblioteca
+                        </span>
+                    </div>
+
+                    <div class="topbar-date">
+                        <i class="bi bi-calendar3"></i>
+
+                        <div>
+                            <span>
+                                @DateTime.Now.ToString(
+                                    "dd 'de' MMMM 'de' yyyy",
+                                    System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))
+                            </span>
+
+                            <small>
+                                @DateTime.Now.ToString(
+                                    "dddd",
+                                    System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))
+                            </small>
+                        </div>
+                    </div>
+
+                </header>
+
+
+            <!-- Página -->
+            <main class="main-content" role="main">
+                @RenderBody()
+            </main>
+
+            <footer class="main-footer">
+                &copy; 2026 - Biblioteca Lume
+            </footer>
+
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Biblioteca 
-        </div>
-    </footer>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

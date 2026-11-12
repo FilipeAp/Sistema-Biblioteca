@@ -44,8 +44,6 @@ public class EmprestimoViewModel
 
     // IDs selecionados no formulário
     [Display(Name = "ID da cópia")]
-    [Required(ErrorMessage = "Selecione pelo menos uma cópia")]
-    [MinLength(1, ErrorMessage = "Selecione pelo menos uma cópia")]
     public List<int> CopiaIds { get; set; } = new();
 
     // Opções exibidas nos campos de seleção

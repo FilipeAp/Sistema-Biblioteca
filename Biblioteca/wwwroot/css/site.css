@@ -1,65 +1,74 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
+
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+:root {
+    --lume-green: #102c23;
+    --lume-green-light: #1c4033;
+    --lume-gold: #c49a5a;
+    --lume-cream: #f7efe4;
+    --lume-text: #f5ecdc;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-    margin-bottom: 60px;
-    background-color: #F0EAE1;
+    margin: 0;
+    background-color: var(--lume-cream);
+    font-family: Georgia, serif;
 }
 
 h1 {
     font-family: "Cormorant Garamond", serif;
     font-weight: bold;
 }
+
 th {
     font-family: "Lora", serif;
 }
 
-.navGeral {
-    background-color: #192D26;
-    padding: 10px 300px;
+.app-layout {
+    min-height: 100vh;
 }
 
-.div1Nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+/* =========================================
+   FOCO DOS ELEMENTOS
+========================================= */
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.navGeral .navbar-brand,
-.navGeral .nav-link {
-    color: white !important;
-}
 
-.navUl {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-}
+/* =========================================
+   CHECKBOXES
+========================================= */
 
 .form-check-input:checked {
     background-color: #192D26;
     border-color: #192D26;
 }
 
-.fundoCheckbox{
+.fundoCheckbox {
     background-color: white;
 }
 
@@ -69,6 +78,10 @@ th {
 }
 
 
+/* =========================================
+   FILTROS
+========================================= */
+
 .filtro-status {
     background-color: #192D26;
     border-color: #192D26;
@@ -76,14 +89,12 @@ th {
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-    /* Hover dos filtros */
     .filtro-status:hover {
         background-color: #29483B;
         border-color: #29483B;
         color: #FFFFFF;
     }
 
-    /* Filtro selecionado */
     .filtro-status.active,
     .filtro-status.active:hover {
         background-color: #192D26;
@@ -91,12 +102,20 @@ th {
         color: #FFFFFF;
     }
 
+.grupo-filtros {
+    display: flex;
+    gap: 8px;
+}
 
-/* ========================================
+.filtro-status:focus {
+    box-shadow: 0 0 0 0.15rem rgba(25, 45, 38, 0.3);
+}
+
+
+/* =========================================
    PAGINAÇÃO
-======================================== */
+========================================= */
 
-/* Botões numerados e setas */
 #paginacaoEmprestimo .page-link,
 #paginacaoLivros .page-link {
     background-color: #192D26;
@@ -105,7 +124,6 @@ th {
     transition: background-color 0.2s ease;
 }
 
-    /* Hover da paginação */
     #paginacaoEmprestimo .page-link:hover,
     #paginacaoLivros .page-link:hover {
         background-color: #29483B;
@@ -113,7 +131,6 @@ th {
         color: #FFFFFF;
     }
 
-/* Página atual */
 #paginacaoEmprestimo .page-item.active .page-link,
 #paginacaoLivros .page-item.active .page-link {
     background-color: #29483B;
@@ -122,7 +139,6 @@ th {
     font-weight: bold;
 }
 
-/* Botões desabilitados */
 #paginacaoEmprestimo .page-item.disabled .page-link,
 #paginacaoLivros .page-item.disabled .page-link {
     background-color: #192D26;
@@ -132,13 +148,634 @@ th {
     cursor: not-allowed;
 }
 
-/* Remove o contorno azul padrão ao focar */
-.filtro-status:focus,
 #paginacaoEmprestimo .page-link:focus,
 #paginacaoLivros .page-link:focus {
     box-shadow: 0 0 0 0.15rem rgba(25, 45, 38, 0.3);
 }
-.grupo-filtros {
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--lume-green);
+    color: var(--lume-text);
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 1px solid rgba(196, 154, 90, 0.3);
+}
+
+
+/* LOGO */
+
+.sidebar-brand {
+    padding: 20px 15px 35px;
+    text-align: center;
+}
+
+    .sidebar-brand a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: var(--lume-text);
+    }
+
+    .sidebar-brand img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+    }
+
+.brand-name {
+    font-size: 38px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.brand-subtitle {
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-top: 5px;
+    color: #d6c6a9;
+}
+
+
+/* NAVEGAÇÃO */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    gap: 7px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 50px;
+    padding: 12px 18px;
+    color: var(--lume-text);
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 12px;
+    border-left: 3px solid transparent;
+    transition: all 0.25s ease;
+}
+
+    .sidebar-link i {
+        font-size: 21px;
+        width: 23px;
+        text-align: center;
+    }
+
+    .sidebar-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-link.active {
+        color: #fff3d9;
+        background: var(--lume-green-light);
+        border-left-color: var(--lume-gold);
+        font-weight: bold;
+    }
+
+/* =========================================
+   SCROLLBAR - SIDEBAR LUME
+========================================= */
+
+/* Chrome, Edge e Safari */
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(196, 154, 90, 0.45);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #c49a5a;
+    }
+
+/* Firefox */
+
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(196, 154, 90, 0.55) transparent;
+}
+
+
+/* =========================================
+   MENUS EXPANSÍVEIS
+========================================= */
+
+.sidebar-dropdown {
+    width: 100%;
+}
+
+.sidebar-dropdown-toggle {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar-chevron {
+    margin-left: auto;
+    font-size: 13px !important;
+    width: auto !important;
+    transition: transform 0.25s ease;
+}
+
+.sidebar-dropdown-toggle[aria-expanded="true"] .sidebar-chevron {
+    transform: rotate(180deg);
+}
+
+
+/* SUBMENU */
+
+.sidebar-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 5px 0 8px 25px;
+    padding: 5px 0 5px 15px;
+    border-left: 1px solid rgba(196, 154, 90, 0.4);
+}
+
+.sidebar-sublink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    color: #d6c6a9;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+    .sidebar-sublink i {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .sidebar-sublink:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+    .sidebar-sublink.active {
+        color: #f5d69f;
+        background: rgba(196, 154, 90, 0.12);
+        font-weight: 600;
+    }
+
+
+/* =========================================
+   RODAPÉ DA SIDEBAR
+========================================= */
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 20px 18px;
+}
+
+.sidebar-quote {
+    text-align: center;
+    color: #d6bd91;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.5;
+    padding: 15px 0 25px;
+}
+
+
+/* =========================================
+   CONTA DO USUÁRIO
+========================================= */
+
+.sidebar-account {
+    border-top: 1px solid rgba(196, 154, 90, 0.25);
+    padding-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* IDENTIFICAÇÃO */
+
+.sidebar-account-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.sidebar-account-avatar {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #29483B;
+    border: 1px solid rgba(196, 154, 90, 0.45);
+    border-radius: 50%;
+    color: #e8d5ad;
+    font-size: 20px;
+}
+
+.sidebar-account-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 3px;
+}
+
+.sidebar-account-name {
+    color: #f5ecdc;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar-account-role {
+    color: #c9b99a;
+    font-size: 11px;
+}
+
+
+/* BOTÃO SAIR */
+
+.sidebar-logout {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid rgba(196, 154, 90, 0.35);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #e8d5ad;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+    .sidebar-logout i {
+        font-size: 16px;
+    }
+
+    .sidebar-logout:hover {
+        background: rgba(180, 65, 55, 0.15);
+        border-color: rgba(210, 110, 95, 0.6);
+        color: #ffb5a9;
+    }
+
+
+/* LINK DE LOGIN */
+
+.sidebar-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 11px;
+    border: 1px solid rgba(196, 154, 90, 0.35);
+    border-radius: 9px;
+    color: #e8d5ad;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+    .sidebar-login:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+    }
+
+
+/* =========================================
+   ÁREA PRINCIPAL
+========================================= */
+
+.main-area {
+    margin-left: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================
+   TOPBAR - LUME
+   ESTILIZAÇÃO GLOBAL
+========================================= */
+
+.topbar {
+    min-height: 90px;
+    padding: 15px 35px;
+    background: #faf3e9;
+    border-bottom: 1px solid #e6d8c5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+
+/* CONTEXTO DA PÁGINA */
+
+.topbar-context {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #9a8974;
+    font-size: 14px;
+}
+
+    .topbar-breadcrumb i {
+        font-size: 10px;
+        color: #bba98f;
+    }
+
+    .topbar-breadcrumb strong {
+        color: var(--lume-green);
+        font-family: "Literata", serif;
+        font-weight: 600;
+    }
+
+.topbar-subtitle {
+    color: #9b8c7a;
+    font-size: 12px;
+}
+
+
+/* DATA */
+
+.topbar-date {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--lume-green);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+    .topbar-date > i {
+        font-size: 23px;
+        color: #b28b53;
+    }
+
+    .topbar-date div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .topbar-date span {
+        display: block;
+        font-family: "Literata", serif;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .topbar-date small {
+        display: block;
+        color: #9b8c7a;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+
+/* ELEMENTOS ADICIONAIS DA TOPBAR */
+
+.topbar-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(580px, 60%);
+    padding: 12px 18px;
+    border: 1px solid #dfd0bd;
+    border-radius: 30px;
+    background: #fffaf3;
+}
+
+    .topbar-search input {
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--lume-green);
+    font-size: 15px;
+}
+
+    .topbar-user i {
+        font-size: 22px;
+    }
+
+
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    width: 100%;
+    min-width: 0;
+}
+
+.main-footer {
+    padding: 15px 30px;
+    color: #8b806f;
+    border-top: 1px solid #e6d8c5;
+}
+
+/* =========================================
+   SCROLLBAR GLOBAL - LUME
+========================================= */
+
+/* Chrome, Edge e Safari */
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 7px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: rgba(196, 154, 90, 0.45);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+    html::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:hover {
+        background: #c49a5a;
+        background-clip: padding-box;
+    }
+
+/* Firefox */
+
+html,
+body {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(196, 154, 90, 0.55) transparent;
+}
+
+
+/* =========================================
+   BOTÕES E ELEMENTOS MOBILE
+========================================= */
+
+.sidebar-toggle {
+    display: none;
+    border: none;
+    background: transparent;
+    color: var(--lume-green);
+    font-size: 27px;
+    cursor: pointer;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 768px) {
+
+    /* SIDEBAR */
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+    .main-area {
+        margin-left: 0;
+    }
+
+    /* BOTÃO DO MENU */
+
+    .sidebar-toggle {
+        display: block;
+        flex-shrink: 0;
+    }
+
+    /* TOPBAR */
+
+    .topbar {
+        min-height: 75px;
+        padding: 10px 15px;
+        gap: 12px;
+    }
+
+    .topbar-context {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .topbar-breadcrumb {
+        font-size: 12px;
+        gap: 7px;
+    }
+
+    .topbar-subtitle {
+        font-size: 10px;
+    }
+
+    /* DATA */
+
+    .topbar-date {
+        gap: 6px;
+    }
+
+        .topbar-date > i {
+            font-size: 18px;
+        }
+
+        .topbar-date span {
+            font-size: 10px;
+        }
+
+        .topbar-date small {
+            font-size: 8px;
+            letter-spacing: 1px;
+        }
+
+    /* CONTEÚDO */
+
+    .main-content {
+        padding: 18px;
+    }
+
+    /* FUNDO DA SIDEBAR */
+
+    .sidebar-backdrop.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 999;
+    }
 }
